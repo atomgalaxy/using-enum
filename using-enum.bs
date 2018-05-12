@@ -1,0 +1,145 @@
+<pre class='metadata'>
+Title: Using Enum
+Status: D
+Audience: SG1, LEWG
+Editor: Gašper Ažman <gasper.azman@gmail.com>
+Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
+Shortname: Dxxxx
+Abstract: Class enums are restricted namespaces. Let's extend the using
+          declaration to them.
+Group: WG21
+Date: 2018-05-12
+Markup Shorthands: markdown yes
+Revision: 1
+ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
+</pre>
+
+
+Motivation {#motivation}
+==========
+
+Consider an enum class:
+
+```cpp
+enum class rgba_color_channel { red, green, blue, alpha };
+```
+
+Currently, a switch using this enum looks as follows:
+
+```cpp
+std::string_view to_string(rgba_color_channel channel) {
+  switch (channel) {
+    case rgba_color_channel::red:   return "red";
+    case rgba_color_channel::green: return "green";
+    case rgba_color_channel::blue:  return "blue";
+    case rgba_color_channel::alpha: return "alpha";
+  }
+}
+```
+
+The necessary repetition of the class enum name reduces legibility by
+introducing noise in contexts where the enum class is obvious.
+
+To eliminate the noise penalty for introducing long (but descriptive) enum class
+names, this paper proposes that the statement
+
+```cpp
+using enum rgba_color_channel;
+```
+
+introduce the enum member identifiers into the local scope so that they may be
+referred to unqualified.
+
+Furthermore, the syntax
+
+```cpp
+using rgba_color_channel::red;
+```
+
+should bring the identifier `red` into the local scope, so that it may be used
+unqualified.
+
+The above example would then probably be written as
+
+```cpp
+std::string_view to_string(rgba_color_channel channel) {
+  using enum rgba_color_channel;
+  switch (my_channel) {
+    case red:   return "red";
+    case green: return "green";
+    case blue:  return "blue";
+    case alpha: return "alpha";
+  }
+}
+```
+
+
+Rationale {#rationale}
+=========
+
+Consistency {#consistency}
+-----------
+
+`enum class`es are not classes - they seem to be closer to namespaces consisting
+of `static constexpr` inline variables. The familiar `using` syntax that works
+for namespaces should therefore apply to them as well.
+
+
+Better Identifiers {#betterids}
+------------------
+
+The introduction of this feature would allow better naming of enums. Currently,
+enums are named with as short an identifier as possible, often to the point
+of absurdity, when they are reduced to completely nondescriptive abbreviations
+that only hint at their proper meaning (just what does `zfqc::add_op` mean?)
+
+With this feature, identifiers become available to unqualified lookup in local
+contexts where their source is obvious, giving control of lookup style back to
+the user of the enum, instead of baking name semantics into the type of the
+enum.
+
+
+Proposal {#proposal}
+========
+
+`using enum IDENTIFIER` {#using-enum-id}
+=======================
+
+We propose the addition of a new `using enum` statement:
+
+```cpp
+using enum IDENTIFIER;
+```
+
+The above statement introduces the members of enum IDENTIFIER into the local
+namespace, thus enabling lookup without qualification. As usual, a name lookup
+ambiguity makes the program ill-formed (diagnostic required).
+
+
+`using ENUM_ID::IDENTIFIER` {#using-id}
+===========================
+
+We propose to allow the syntax of
+
+```cpp
+using ENUM_ID::IDENTIFIER
+```
+
+to introduce the IDENTIFIER into the local namespace, aliasing
+ENUM_ID::IDENTIFIER.
+
+
+Acknowledgements {#ack}
+================
+
+The authors would like to thank Marcel Ebmer and Lisa Lipincott for early
+feedback.
+
+
+
+
+
+
+
+
+
