@@ -8,7 +8,7 @@ Shortname: P1099
 Abstract: Class enums are restricted namespaces. Let's extend the using
           declaration to them.
 Group: WG21
-Date: 2018-05-12
+Date: 2018-05-23
 Markup Shorthands: markdown yes
 Revision: 0
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
