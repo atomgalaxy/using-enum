@@ -10,7 +10,7 @@ Abstract: Class enums are restricted namespaces. Let's extend the using
 Group: WG21
 Date: 2018-05-12
 Markup Shorthands: markdown yes
-Revision: 1
+Revision: 0
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
 </pre>
 
