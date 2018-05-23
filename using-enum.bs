@@ -4,7 +4,7 @@ Status: D
 Audience: SG1, LEWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
-Shortname: Dxxxx
+Shortname: P1099
 Abstract: Class enums are restricted namespaces. Let's extend the using
           declaration to them.
 Group: WG21
