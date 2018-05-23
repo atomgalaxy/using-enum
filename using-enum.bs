@@ -63,8 +63,8 @@ The above example would then probably be written as
 
 ```cpp
 std::string_view to_string(rgba_color_channel channel) {
-  using enum rgba_color_channel;
   switch (my_channel) {
+    using enum rgba_color_channel;
     case red:   return "red";
     case green: return "green";
     case blue:  return "blue";
@@ -97,6 +97,13 @@ With this feature, identifiers become available to unqualified lookup in local
 contexts where their source is obvious, giving control of lookup style back to
 the user of the enum, instead of baking name semantics into the type of the
 enum.
+
+
+Evidence of Need {#need}
+----------------
+At a casual search, we were able to locate this
+[thread on stackoverflow](https://stackoverflow.com/questions/9450338/equivalent-of-using-namespace-x-for-scoped-enumerations).
+
 
 
 Proposal {#proposal}

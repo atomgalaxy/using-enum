@@ -1193,7 +1193,7 @@ Possible extra rowspan handling
   </style>
   <meta content="Bikeshed version 650c7f090a7031056e48b2cf26f91e72b5c14a32" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
-  <meta content="1b2716ff1e2d46a01a23db393d96c75ac7d8f217" name="document-revision">
+  <meta content="0ff1fbb1cfb7b5588ec8e23465b4b9264b43d6e7" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1437,6 +1437,7 @@ declaration to them.</p>
      <ol class="toc">
       <li><a href="#consistency"><span class="secno">2.1</span> <span class="content">Consistency</span></a>
       <li><a href="#betterids"><span class="secno">2.2</span> <span class="content">Better Identifiers</span></a>
+      <li><a href="#need"><span class="secno">2.3</span> <span class="content">Evidence of Need</span></a>
      </ol>
     <li><a href="#proposal"><span class="secno">3</span> <span class="content">Proposal</span></a>
     <li><a href="#using-enum-id"><span class="secno">4</span> <span class="content"><code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span></code></span></a>
@@ -1474,8 +1475,8 @@ referred to unqualified.</p>
 unqualified.</p>
    <p>The above example would then probably be written as</p>
 <pre class="language-cpp highlight"><span class="n">std</span><span class="o">::</span><span class="n">string_view</span> <span class="n">to_string</span><span class="p">(</span><span class="n">rgba_color_channel</span> <span class="n">channel</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">using</span> <span class="k">enum</span> <span class="n">rgba_color_channel</span><span class="p">;</span>
   <span class="k">switch</span> <span class="p">(</span><span class="n">my_channel</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="k">enum</span> <span class="n">rgba_color_channel</span><span class="p">;</span>
     <span class="k">case</span> <span class="nl">red</span><span class="p">:</span>   <span class="k">return</span> <span class="s">"red"</span><span class="p">;</span>
     <span class="k">case</span> <span class="nl">green</span><span class="p">:</span> <span class="k">return</span> <span class="s">"green"</span><span class="p">;</span>
     <span class="k">case</span> <span class="nl">blue</span><span class="p">:</span>  <span class="k">return</span> <span class="s">"blue"</span><span class="p">;</span>
@@ -1497,6 +1498,8 @@ that only hint at their proper meaning (just what does <code class="highlight"><
 contexts where their source is obvious, giving control of lookup style back to
 the user of the enum, instead of baking name semantics into the type of the
 enum.</p>
+   <h3 class="heading settled" data-level="2.3" id="need"><span class="secno">2.3. </span><span class="content">Evidence of Need</span><a class="self-link" href="#need"></a></h3>
+    At a casual search, we were able to locate this <a href="https://stackoverflow.com/questions/9450338/equivalent-of-using-namespace-x-for-scoped-enumerations">thread on stackoverflow</a>. 
    <h2 class="heading settled" data-level="3" id="proposal"><span class="secno">3. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
    <h2 class="heading settled" data-level="4" id="using-enum-id"><span class="secno">4. </span><span class="content"><code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span></code></span><a class="self-link" href="#using-enum-id"></a></h2>
    <p>We propose the addition of a new <code class="highlight"><span class="k">using</span> <span class="k">enum</span></code> statement:</p>
