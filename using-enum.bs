@@ -139,7 +139,7 @@ ENUM_ID::IDENTIFIER.
 Acknowledgements {#ack}
 ================
 
-The authors would like to thank Marcel Ebmer and Lisa Lipincott for early
+The authors would like to thank Marcel Ebmer and Lisa Lippincott for early
 feedback.
 
 
