@@ -1,6 +1,6 @@
 <pre class='metadata'>
 Title: Using Enum
-Status: D
+Status: P
 Audience: SG1, LEWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
