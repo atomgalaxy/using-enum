@@ -1193,7 +1193,7 @@ Possible extra rowspan handling
   </style>
   <meta content="Bikeshed version 650c7f090a7031056e48b2cf26f91e72b5c14a32" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
-  <meta content="41d8a81692986a9c3c145eda68c1330acd872f14" name="document-revision">
+  <meta content="aba2bb03ff4c4edf17b581bb150b8714d7cc2134" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1465,6 +1465,8 @@ declaration to them.</p>
      <ol class="toc">
       <li><a href="#faq-old-enum"><span class="secno">5.1</span> <span class="content">Can I do this with non-class enums?</span></a>
       <li><a href="#faq-ns-alias"><span class="secno">5.2</span> <span class="content">Are you proposing mirroring the namespace alias syntax as well?</span></a>
+      <li><a href="#faq-using-enum-struct"><span class="secno">5.3</span> <span class="content">Why not allow <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="k">struct</span><span class="o">/</span><span class="k">class</span> <span class="nc">ENUM_ID</span><span class="p">;</span></code>?</span></a>
+      <li><a href="#faq-using-decl-why"><span class="secno">5.4</span> <span class="content">Why propose <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code> at all?</span></a>
      </ol>
     <li>
      <a href="#wording"><span class="secno">6</span> <span class="content">Proposed Wording</span></a>
@@ -1566,11 +1568,25 @@ name.</p>
    <p>This paper proposes no such change.</p>
    <h3 class="heading settled" data-level="5.2" id="faq-ns-alias"><span class="secno">5.2. </span><span class="content">Are you proposing mirroring the namespace alias syntax as well?</span><a class="self-link" href="#faq-ns-alias"></a></h3>
    <p>No. We already have a way to do that, and it looks like this:</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="n">my_alias</span> <span class="o">=</span> <span class="n">my</span><span class="o">::</span><span class="k">namespace</span><span class="o">::</span><span class="n">enum_name</span><span class="p">;</span>
+<pre class="language-cpp highlight"><span class="k">using</span> <span class="n">my_alias</span> <span class="o">=</span> <span class="n">my</span><span class="o">::</span><span class="n">name_space</span><span class="o">::</span><span class="n">enum_name</span><span class="p">;</span>
 </pre>
    <p>In addition, <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a> proposes deprecating namespace aliases in favor of
 generalized <code class="highlight"><span class="k">using</span> <span class="n">name</span> <span class="o">=</span> <span class="n">id_expression</span></code>, so doing this would go counter the
 current movement of the standard.</p>
+   <h3 class="heading settled" data-level="5.3" id="faq-using-enum-struct"><span class="secno">5.3. </span><span class="content">Why not allow <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="k">struct</span><span class="o">/</span><span class="k">class</span> <span class="nc">ENUM_ID</span><span class="p">;</span></code>?</span><a class="self-link" href="#faq-using-enum-struct"></a></h3>
+    Because it’s a needless complication and would introduce another layer of
+"struct &amp; class don’t match" linter errors. 
+   <h3 class="heading settled" data-level="5.4" id="faq-using-decl-why"><span class="secno">5.4. </span><span class="content">Why propose <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code> at all?</span><a class="self-link" href="#faq-using-decl-why"></a></h3>
+    ... given that the following already works: 
+<pre class="language-cpp highlight">  <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">red</span> <span class="o">=</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="n">red</span><span class="p">;</span>
+</pre>
+   <p>and that, given <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a>, this will work:</p>
+<pre class="language-cpp highlight">  <span class="k">using</span> <span class="n">red</span> <span class="o">=</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="n">red</span><span class="p">;</span>
+</pre>
+   <p>The reason is "DRY" - don’t repeat yourself. You’re forced to repeat the name of
+the enumerator. That said, the authors are perfectly willing to throw this piece
+out if the <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">ENUM_ID</span></code> piece gets consensus and this is the stumbling
+block.</p>
    <h2 class="heading settled" data-level="6" id="wording"><span class="secno">6. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
    <h3 class="heading settled" data-level="6.1" id="wording-preface"><span class="secno">6.1. </span><span class="content">Preface</span><a class="self-link" href="#wording-preface"></a></h3>
     The authors are new at this, and welcome suggestions for wording. 
@@ -1649,7 +1665,8 @@ the stable reference "[enum.udir]".</p>
    </div>
    <h2 class="heading settled" data-level="7" id="ack"><span class="secno">7. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
    <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early
-feedback, and the members of the BSI C++ WG for further feedback.</p>
+feedback, and the members of the BSI C++ WG for further feedback, especially
+Graham Haynes.</p>
   </main>
 <script>
 (function() {

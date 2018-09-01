@@ -176,12 +176,35 @@ Are you proposing mirroring the namespace alias syntax as well? {#faq-ns-alias}
 
 No. We already have a way to do that, and it looks like this:
 ```cpp
-using my_alias = my::namespace::enum_name;
+using my_alias = my::name_space::enum_name;
 ```
 
 In addition, [[P0945R0]] proposes deprecating namespace aliases in favor of
 generalized `using name = id_expression`, so doing this would go counter the
 current movement of the standard.
+
+Why not allow `using enum struct/class ENUM_ID;`? {#faq-using-enum-struct}
+---------------------------------------------------
+Because it's a needless complication and would introduce another layer of
+"struct & class don't match" linter errors.
+
+
+Why propose `using ENUM_ID::IDENTIFIER` at all? {#faq-using-decl-why}
+-----------------------------------------------
+... given that the following already works:
+```cpp
+  constexpr auto red = rgba_color_channel::red;
+```
+
+and that, given [[P0945R0]], this will work:
+```cpp
+  using red = rgba_color_channel::red;
+```
+
+The reason is "DRY" - don't repeat yourself. You're forced to repeat the name of
+the enumerator. That said, the authors are perfectly willing to throw this piece
+out if the `using enum ENUM_ID` piece gets consensus and this is the stumbling
+block.
 
 
 Proposed Wording {#wording}
@@ -292,7 +315,8 @@ Acknowledgements {#ack}
 ================
 
 The authors would like to thank Marcel Ebmer and Lisa Lippincott for early
-feedback, and the members of the BSI C++ WG for further feedback.
+feedback, and the members of the BSI C++ WG for further feedback, especially
+Graham Haynes.
 
 <!--
  vim: ft=markdown
