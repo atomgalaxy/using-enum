@@ -165,10 +165,13 @@ name.
 Frequently Asked Questions {#faq}
 ==========================
 
-Can I do this with non-class enums? {#faq-old-enum}
+Can I do this with unscoped enums? {#faq-old-enum}
 -----------------------------------
 
-This paper proposes no such change.
+This paper proposes no such change, but the authors are willing to entertain a
+followup paper that does that as well. The motivation for that would be
+old-style "`class enum`s" (`class foo { enum bar { A, B, C }; }`) which were
+superceeded by scoped enums.
 
 
 Are you proposing mirroring the namespace alias syntax as well? {#faq-ns-alias}
@@ -235,11 +238,10 @@ Add:
 <i>enum-name</i>
 
 1. A <i>using-enum-directive</i> shall not appear in class scope, but may appear
-      in namespace scope or in block scope. [ Note: When looking up an enum in a
-      <i>using-enum-directive</i>, only scoped enumerations are considered, see
-      [basic.lookup.udir]. — end note ] The optional
+      in namespace scope or in block scope. The optional
       <i>attribute-specifier-seq</i> appertains to the
-      <i>using-enum-directive</i>.
+      <i>using-enum-directive</i>. The <i>enum-name</i> in a
+      <i>using-enum-directive</i> shall name a scoped enumeration.
 
 2. A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the
       nominated scoped enumeration can be used in the scope in which the
@@ -253,6 +255,7 @@ Add:
       ```cpp
       namespace A {
         enum class e { i = 0 };
+        using enum a::e; // make e::i visible in A
         namespace B {
           enum class f { i = 1 };
           using enum A::B::f;
@@ -274,19 +277,10 @@ Add:
 
 </div>
 
-
-Under [basic.lookup.udir], after paragraph 1, add:
-
+Under [basic.def], add (just after <i>using-directive</i>)  (and renumber
+section):
 <div class='ins'>
-
-2. In a <i>using-enum-directive</i>, during the lookup for an <i>enum-name</i>,
-       only scoped enumerations are considered.
-
-</div>
-
-Under [basic.def], add (just after <i>using-directive</i> (and renumber):
-<div class='ins'>
-2.17. &mdash; it is an <i>using-enum-directive</i>
+2.17. &mdash; it is a <i>using-enum-directive</i>
 
 </div>
 
@@ -302,7 +296,7 @@ In chapter [namespace.udecl], remove:
 
 Then add:
 <div class='ins'>
-7. A <i>using-declaration</i> that names a scoped enumerator shall become an
+7. A <i>using-declaration</i> that names a scoped enumerator shall become
        a synonim for that enumerator in the <i>using-declaration</i>'s
        declarative region. [ <i>Note:</i> this is equivalent to declaring that
        enumerator in the <i>using-declaration</i>'s declarative region. &mdash;
@@ -316,7 +310,7 @@ Acknowledgements {#ack}
 
 The authors would like to thank Marcel Ebmer and Lisa Lippincott for early
 feedback, and the members of the BSI C++ WG for further feedback, especially
-Graham Haynes.
+Graham Haynes and Barry Revzin.
 
 <!--
  vim: ft=markdown

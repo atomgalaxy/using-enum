@@ -1193,7 +1193,7 @@ Possible extra rowspan handling
   </style>
   <meta content="Bikeshed version 650c7f090a7031056e48b2cf26f91e72b5c14a32" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
-  <meta content="aba2bb03ff4c4edf17b581bb150b8714d7cc2134" name="document-revision">
+  <meta content="7fc014f94ded0f4257127ec4bdebfea1d5d1bddf" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1463,7 +1463,7 @@ declaration to them.</p>
     <li>
      <a href="#faq"><span class="secno">5</span> <span class="content">Frequently Asked Questions</span></a>
      <ol class="toc">
-      <li><a href="#faq-old-enum"><span class="secno">5.1</span> <span class="content">Can I do this with non-class enums?</span></a>
+      <li><a href="#faq-old-enum"><span class="secno">5.1</span> <span class="content">Can I do this with unscoped enums?</span></a>
       <li><a href="#faq-ns-alias"><span class="secno">5.2</span> <span class="content">Are you proposing mirroring the namespace alias syntax as well?</span></a>
       <li><a href="#faq-using-enum-struct"><span class="secno">5.3</span> <span class="content">Why not allow <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="k">struct</span><span class="o">/</span><span class="k">class</span> <span class="nc">ENUM_ID</span><span class="p">;</span></code>?</span></a>
       <li><a href="#faq-using-decl-why"><span class="secno">5.4</span> <span class="content">Why propose <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code> at all?</span></a>
@@ -1564,8 +1564,11 @@ current scope.</p>
 with the syntax <code class="highlight"><span class="k">using</span> <span class="n">name</span> <span class="o">=</span> <span class="n">id_expression</span></code>, which duplicates the enumerator
 name.</p>
    <h2 class="heading settled" data-level="5" id="faq"><span class="secno">5. </span><span class="content">Frequently Asked Questions</span><a class="self-link" href="#faq"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="faq-old-enum"><span class="secno">5.1. </span><span class="content">Can I do this with non-class enums?</span><a class="self-link" href="#faq-old-enum"></a></h3>
-   <p>This paper proposes no such change.</p>
+   <h3 class="heading settled" data-level="5.1" id="faq-old-enum"><span class="secno">5.1. </span><span class="content">Can I do this with unscoped enums?</span><a class="self-link" href="#faq-old-enum"></a></h3>
+   <p>This paper proposes no such change, but the authors are willing to entertain a
+followup paper that does that as well. The motivation for that would be
+old-style "<code class="highlight"><span class="k">class</span> <span class="nc">enum</span></code>s" (<code class="highlight"><span class="k">class</span> <span class="nc">foo</span> <span class="p">{</span> <span class="k">enum</span> <span class="n">bar</span> <span class="p">{</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span> <span class="p">};</span> <span class="p">}</span></code>) which were
+superceeded by scoped enums.</p>
    <h3 class="heading settled" data-level="5.2" id="faq-ns-alias"><span class="secno">5.2. </span><span class="content">Are you proposing mirroring the namespace alias syntax as well?</span><a class="self-link" href="#faq-ns-alias"></a></h3>
    <p>No. We already have a way to do that, and it looks like this:</p>
 <pre class="language-cpp highlight"><span class="k">using</span> <span class="n">my_alias</span> <span class="o">=</span> <span class="n">my</span><span class="o">::</span><span class="n">name_space</span><span class="o">::</span><span class="n">enum_name</span><span class="p">;</span>
@@ -1604,8 +1607,7 @@ the stable reference "[enum.udir]".</p>
     <ol>
      <li data-md="">
       <p>A <i>using-enum-directive</i> shall not appear in class scope, but may appear
-  in namespace scope or in block scope. [ Note: When looking up an enum in a <i>using-enum-directive</i>, only scoped enumerations are considered, see
-  [basic.lookup.udir]. — end note ] The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.</p>
+  in namespace scope or in block scope. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>. The <i>enum-name</i> in a <i>using-enum-directive</i> shall name a scoped enumeration.</p>
      <li data-md="">
       <p>A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the
   nominated scoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.
@@ -1616,7 +1618,8 @@ the stable reference "[enum.udir]".</p>
   region in which it appears. [ <i>Example:</i></p>
 <pre class="language-cpp highlight">      <span class="k">namespace</span> <span class="n">A</span> <span class="p">{</span>
         <span class="k">enum</span> <span class="k">class</span> <span class="nc">e</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">};</span>
-        <span class="k">namespace</span> <span class="n">B</span> <span class="p">{</span>
+        <span class="k">using</span> <span class="k">enum</span> <span class="n">a</span><span class="o">::</span><span class="n">e</span><span class="p">;</span> <span class="c1">// make e::i visible in A</span>
+<span class="c1"></span>        <span class="k">namespace</span> <span class="n">B</span> <span class="p">{</span>
           <span class="k">enum</span> <span class="k">class</span> <span class="nc">f</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
           <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">B</span><span class="o">::</span><span class="n">f</span><span class="p">;</span>
           <span class="kt">void</span> <span class="nf">f1</span><span class="p">()</span> <span class="p">{</span>
@@ -1635,16 +1638,9 @@ the stable reference "[enum.udir]".</p>
        — end example ] 
     </ol>
    </div>
-   <p>Under [basic.lookup.udir], after paragraph 1, add:</p>
-   <div class="ins">
-    <ol start="2">
-     <li data-md="">
-      <p>In a <i>using-enum-directive</i>, during the lookup for an <i>enum-name</i>,
-   only scoped enumerations are considered.</p>
-    </ol>
-   </div>
-   <p>Under [basic.def], add (just after <i>using-directive</i> (and renumber):</p>
-   <div class="ins"> 2.17. — it is an <i>using-enum-directive</i> </div>
+   <p>Under [basic.def], add (just after <i>using-directive</i>)  (and renumber
+section):</p>
+   <div class="ins"> 2.17. — it is a <i>using-enum-directive</i> </div>
    <h3 class="heading settled" data-level="6.3" id="wording-enumdecl"><span class="secno">6.3. </span><span class="content">Changes required to add <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span><span class="p">;</span></code></span><a class="self-link" href="#wording-enumdecl"></a></h3>
    <p>In chapter [namespace.udecl], remove:</p>
    <div class="del">
@@ -1657,7 +1653,7 @@ the stable reference "[enum.udir]".</p>
    <div class="ins">
     <ol start="7">
      <li data-md="">
-      <p>A <i>using-declaration</i> that names a scoped enumerator shall become an
+      <p>A <i>using-declaration</i> that names a scoped enumerator shall become
    a synonim for that enumerator in the <i>using-declaration</i>’s
    declarative region. [ <i>Note:</i> this is equivalent to declaring that
    enumerator in the <i>using-declaration</i>’s declarative region. — <i>end note</i>]</p>
@@ -1666,7 +1662,7 @@ the stable reference "[enum.udir]".</p>
    <h2 class="heading settled" data-level="7" id="ack"><span class="secno">7. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
    <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early
 feedback, and the members of the BSI C++ WG for further feedback, especially
-Graham Haynes.</p>
+Graham Haynes and Barry Revzin.</p>
   </main>
 <script>
 (function() {
