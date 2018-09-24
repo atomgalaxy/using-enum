@@ -32,7 +32,7 @@ ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
 Revision History {#history}
 ================
 - r1: Typos. Changed target from LEWG to EWG.
-- r2: Added FAQ and wording.
+- r2: Added FAQ and wording, and extended to regular enums.
 
 Motivation {#motivation}
 ==========
@@ -66,8 +66,7 @@ names, this paper proposes that the statement
 using enum rgba_color_channel;
 ```
 
-introduce the enum member identifiers into the local scope so that they may be
-referred to unqualified.
+introduce the enum member identifiers into the local scope so that they may be referred to unqualified.
 
 Furthermore, the syntax
 
@@ -168,10 +167,8 @@ Frequently Asked Questions {#faq}
 Can I do this with unscoped enums? {#faq-old-enum}
 -----------------------------------
 
-This paper proposes no such change, but the authors are willing to entertain a
-followup paper that does that as well. The motivation for that would be
-old-style "`class enum`s" (`class foo { enum bar { A, B, C }; }`) which were
-superceeded by scoped enums.
+Yes. The motivation for that would be old-style "`class enum`s" (
+`class foo { enum bar { A, B, C }; }`) which were superceeded by scoped enums.
 
 
 Are you proposing mirroring the namespace alias syntax as well? {#faq-ns-alias}
@@ -205,9 +202,9 @@ and that, given [[P0945R0]], this will work:
 ```
 
 The reason is "DRY" - don't repeat yourself. You're forced to repeat the name of
-the enumerator. That said, the authors are perfectly willing to throw this piece
-out if the `using enum ENUM_ID` piece gets consensus and this is the stumbling
-block.
+the enumerator. That said, the authors are perfectly willing to throw this part
+of the paper out if the `using enum ENUM_ID` piece gets consensus and this is
+the stumbling block.
 
 
 Proposed Wording {#wording}
@@ -237,21 +234,11 @@ Add:
 <tt>using enum</tt> <i>nested-name-specifier<sub>opt</sub></i>
 <i>enum-name</i>
 
-1. A <i>using-enum-directive</i> shall not appear in class scope, but may appear
-      in namespace scope or in block scope. The optional
-      <i>attribute-specifier-seq</i> appertains to the
-      <i>using-enum-directive</i>. The <i>enum-name</i> in a
-      <i>using-enum-directive</i> shall name a scoped enumeration.
+1. A <i>using-enum-directive</i> shall not appear in class scope, but may appear in namespace scope or in block scope. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>. The <i>enum-name</i> in a <i>using-enum-directive</i> shall name a scoped enumeration or an unscoped enumeration.
 
-2. A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the
-      nominated scoped enumeration can be used in the scope in which the
-      <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.
-      During unqualified name lookup ([basic.lookup.unqual]), the names appear
-      as if they were declared in the scope where the
-      <i>using-enum-directive</i> appears.
+2. A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the nominated scoped enumeration or unscoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.  During unqualified name lookup ([basic.lookup.unqual]), the names appear as if they were declared in the scope where the <i>using-enum-directive</i> appears.
 
-3. A <i>using-enum-directive</i> does not add any members to the declarative
-      region in which it appears. [ <i>Example:</i>
+3. A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears. [ <i>Example:</i>
       ```cpp
       namespace A {
         enum class e { i = 0 };
@@ -277,8 +264,7 @@ Add:
 
 </div>
 
-Under [basic.def], add (just after <i>using-directive</i>)  (and renumber
-section):
+Under [basic.def], add (just after <i>using-directive</i>)  (and renumber section):
 <div class='ins'>
 2.17. &mdash; it is a <i>using-enum-directive</i>
 
@@ -313,5 +299,5 @@ feedback, and the members of the BSI C++ WG for further feedback, especially
 Graham Haynes and Barry Revzin.
 
 <!--
- vim: ft=markdown
+ vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
 -->
