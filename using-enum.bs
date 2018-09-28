@@ -267,28 +267,28 @@ Add:
 2. A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the nominated scoped enumeration or unscoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.  During unqualified name lookup ([basic.lookup.unqual]), the names appear as if they were declared in the scope where the <i>using-enum-directive</i> appears.
 
 3. A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears. [ <i>Example:</i>
-      ```cpp
-      namespace A {
-        enum class e { i = 0 };
-        using enum a::e; // make e::i visible in A
-        namespace B {
-          enum class f { i = 1 };
-          using enum A::B::f;
-          void f1() {
-            i;        // OK, A::B::f::i visible in B and hides A::e::i
-          }
-        }
-      }
-      namespace C {
-        using enum A::e;
+    ```cpp
+    namespace A {
+      enum class e { i = 0 };
+      using enum a::e; // make e::i visible in A
+      namespace B {
+        enum class f { i = 1 };
         using enum A::B::f;
-        void f2() {
-          i;        // ambiguous, A::e::i or A::B::f::i?
+        void f1() {
+          i;        // OK, A::B::f::i visible in B and hides A::e::i
         }
       }
+    }
+    namespace C {
+      using enum A::e;
+      using enum A::B::f;
+      void f2() {
+        i;        // ambiguous, A::e::i or A::B::f::i?
+      }
+    }
 
-      ```
-      &mdash; end example ]
+    ```
+    &mdash; end example ]
 
 </div>
 
@@ -310,11 +310,7 @@ In chapter [namespace.udecl], remove:
 
 Then add:
 <div class='ins'>
-7. A <i>using-declaration</i> that names a scoped enumerator shall become
-       a synonim for that enumerator in the <i>using-declaration</i>'s
-       declarative region. [ <i>Note:</i> this is equivalent to declaring that
-       enumerator in the <i>using-declaration</i>'s declarative region. &mdash;
-       <i>end note</i>]
+7. A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>'s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>'s declarative region. &mdash; <i>end note</i>]
 
 </div>
 

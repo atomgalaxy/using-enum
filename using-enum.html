@@ -1193,7 +1193,7 @@ Possible extra rowspan handling
   </style>
   <meta content="Bikeshed version 650c7f090a7031056e48b2cf26f91e72b5c14a32" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
-  <meta content="40ced526aaa5bd92a05bda079c6d62662e7fa441" name="document-revision">
+  <meta content="12c5133854ba0c17b3f33ba2ce0737d433c09231" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1625,26 +1625,26 @@ the stable reference "[enum.udir]".</p>
       <p>A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the nominated scoped enumeration or unscoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.  During unqualified name lookup ([basic.lookup.unqual]), the names appear as if they were declared in the scope where the <i>using-enum-directive</i> appears.</p>
      <li data-md="">
       <p>A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears. [ <i>Example:</i></p>
-<pre class="language-cpp highlight">      <span class="k">namespace</span> <span class="n">A</span> <span class="p">{</span>
-        <span class="k">enum</span> <span class="k">class</span> <span class="nc">e</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">};</span>
-        <span class="k">using</span> <span class="k">enum</span> <span class="n">a</span><span class="o">::</span><span class="n">e</span><span class="p">;</span> <span class="c1">// make e::i visible in A</span>
-<span class="c1"></span>        <span class="k">namespace</span> <span class="n">B</span> <span class="p">{</span>
-          <span class="k">enum</span> <span class="k">class</span> <span class="nc">f</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
-          <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">B</span><span class="o">::</span><span class="n">f</span><span class="p">;</span>
-          <span class="kt">void</span> <span class="nf">f1</span><span class="p">()</span> <span class="p">{</span>
-            <span class="n">i</span><span class="p">;</span>        <span class="c1">// OK, A::B::f::i visible in B and hides A::e::i</span>
-<span class="c1"></span>          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-      <span class="k">namespace</span> <span class="n">C</span> <span class="p">{</span>
-        <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">e</span><span class="p">;</span>
+<pre class="language-cpp highlight">    <span class="k">namespace</span> <span class="n">A</span> <span class="p">{</span>
+      <span class="k">enum</span> <span class="k">class</span> <span class="nc">e</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">};</span>
+      <span class="k">using</span> <span class="k">enum</span> <span class="n">a</span><span class="o">::</span><span class="n">e</span><span class="p">;</span> <span class="c1">// make e::i visible in A</span>
+<span class="c1"></span>      <span class="k">namespace</span> <span class="n">B</span> <span class="p">{</span>
+        <span class="k">enum</span> <span class="k">class</span> <span class="nc">f</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
         <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">B</span><span class="o">::</span><span class="n">f</span><span class="p">;</span>
-        <span class="kt">void</span> <span class="nf">f2</span><span class="p">()</span> <span class="p">{</span>
-          <span class="n">i</span><span class="p">;</span>        <span class="c1">// ambiguous, A::e::i or A::B::f::i?</span>
+        <span class="kt">void</span> <span class="nf">f1</span><span class="p">()</span> <span class="p">{</span>
+          <span class="n">i</span><span class="p">;</span>        <span class="c1">// OK, A::B::f::i visible in B and hides A::e::i</span>
 <span class="c1"></span>        <span class="p">}</span>
       <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">namespace</span> <span class="n">C</span> <span class="p">{</span>
+      <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">e</span><span class="p">;</span>
+      <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">B</span><span class="o">::</span><span class="n">f</span><span class="p">;</span>
+      <span class="kt">void</span> <span class="nf">f2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">i</span><span class="p">;</span>        <span class="c1">// ambiguous, A::e::i or A::B::f::i?</span>
+<span class="c1"></span>      <span class="p">}</span>
+    <span class="p">}</span>
 </pre>
-       — end example ] 
+      — end example ] 
     </ol>
    </div>
    <p>Under [basic.def], add (just after <i>using-directive</i>)  (and renumber section):</p>
@@ -1661,10 +1661,7 @@ the stable reference "[enum.udir]".</p>
    <div class="ins">
     <ol start="7">
      <li data-md="">
-      <p>A <i>using-declaration</i> that names a scoped enumerator shall become
-   a synonim for that enumerator in the <i>using-declaration</i>’s
-   declarative region. [ <i>Note:</i> this is equivalent to declaring that
-   enumerator in the <i>using-declaration</i>’s declarative region. — <i>end note</i>]</p>
+      <p>A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>’s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>’s declarative region. — <i>end note</i>]</p>
     </ol>
    </div>
    <h2 class="heading settled" data-level="7" id="ack"><span class="secno">7. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
