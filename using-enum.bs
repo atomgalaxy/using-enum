@@ -37,6 +37,10 @@ Revision History {#history}
 Motivation {#motivation}
 ==========
 
+> The single biggest deterrent to use of scoped enumerations is the inability to associate them with a *using directive*.
+>
+>     -- Dan Saks
+
 Consider an enum class:
 
 ```cpp
@@ -59,7 +63,7 @@ std::string_view to_string(rgba_color_channel channel) {
 The necessary repetition of the class enum name reduces legibility by
 introducing noise in contexts where the enum class is obvious.
 
-To eliminate the noise penalty for introducing long (but descriptive) enum class
+To eliminate the noise penalty for introducing long (but descriptive) `enum class`
 names, this paper proposes that the statement
 
 ```cpp
@@ -98,9 +102,10 @@ Rationale {#rationale}
 Consistency {#consistency}
 -----------
 
-`enum class`es are not classes - they seem to be closer to namespaces consisting
-of `static constexpr` inline variables. The familiar `using` syntax that works
-for namespaces should therefore apply to them as well, in some fashion.
+`enum class`es, as well as plain old `enum`s, are not classes - they seem to be
+closer to namespaces consisting of `static constexpr` inline variables. The
+familiar `using` syntax that works for namespaces should therefore apply to
+them as well, in some fashion.
 
 
 Better Identifiers {#betterids}
@@ -122,6 +127,9 @@ Evidence of Need {#need}
 At a casual search, we were able to locate this
 [thread on stackoverflow](https://stackoverflow.com/questions/9450338/equivalent-of-using-namespace-x-for-scoped-enumerations).
 
+Anecdotally, 100% of people the authors have shown this to (~30) at CppCon have
+displayed a very enthusiastic response, with frequent comments of "I'd use enum
+classes but they are too verbose, this solves my problem!"
 
 
 Proposal {#proposal}
@@ -136,9 +144,9 @@ We propose the addition of a new `using enum` statement:
 using enum IDENTIFIER;
 ```
 
-The above statement introduces the members of enum IDENTIFIER into the local
-namespace, thus enabling lookup without qualification. As usual, a name lookup
-ambiguity makes the program ill-formed (diagnostic required).
+The above statement introduces the members of the enumeration `IDENTIFIER` into
+the local namespace, thus enabling lookup without qualification. As usual, a
+name lookup ambiguity makes the program ill-formed (diagnostic required).
 
 
 Syntax: `using ENUM_ID::IDENTIFIER` {#using-id}
@@ -150,14 +158,14 @@ We propose to allow the syntax of
 using ENUM_ID::IDENTIFIER
 ```
 
-to introduce the IDENTIFIER into the local namespace, aliasing
+to introduce the `IDENTIFIER` into the local namespace, aliasing
 `ENUM_ID::IDENTIFIER`.
 
 This would mirror the current syntax for introducing namespaced names into the
 current scope.
 
 Note: this does not conflict with [[P0945R0]], because that paper only deals
-with the syntax `using name = id_expression`, which duplicates the enumerator
+with the syntax `using name = id-expression`, which duplicates the enumerator
 name.
 
 
@@ -167,14 +175,31 @@ Frequently Asked Questions {#faq}
 Can I do this with unscoped enums? {#faq-old-enum}
 -----------------------------------
 
-Yes. The motivation for that would be old-style "`class enum`s" (
-`class foo { enum bar { A, B, C }; }`) which were superceeded by scoped enums.
+Yes. The motivation for that is the pattern
+
+```cpp
+class foo {
+   enum bar {
+     A,
+     B,
+     C
+   };
+};
+```
+
+which were superceeded by scoped enums. With this feature one can bring `A`,
+`B` and `C` into the local scope by invoking:
+
+```cpp
+using enum foo::bar;
+```
 
 
 Are you proposing mirroring the namespace alias syntax as well? {#faq-ns-alias}
 ---------------------------------------------------------------
 
 No. We already have a way to do that, and it looks like this:
+
 ```cpp
 using my_alias = my::name_space::enum_name;
 ```
@@ -185,13 +210,16 @@ current movement of the standard.
 
 Why not allow `using enum struct/class ENUM_ID;`? {#faq-using-enum-struct}
 ---------------------------------------------------
+
 Because it's a needless complication and would introduce another layer of
 "struct & class don't match" linter errors.
 
 
 Why propose `using ENUM_ID::IDENTIFIER` at all? {#faq-using-decl-why}
 -----------------------------------------------
+
 ... given that the following already works:
+
 ```cpp
   constexpr auto red = rgba_color_channel::red;
 ```
