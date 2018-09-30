@@ -5,8 +5,7 @@ Audience: SG1, EWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
 Shortname: P1099
-Abstract: Class enums are restricted namespaces. Let's extend the using
-          declaration to them.
+Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
 Date: 2018-09-01
 Markup Shorthands: markdown yes
@@ -39,7 +38,7 @@ Motivation {#motivation}
 
 > The single biggest deterrent to use of scoped enumerations is the inability to associate them with a *using directive*.
 >
->     -- Dan Saks
+> &nbsp;&nbsp;&nbsp;&nbsp;&emdash; Dan Saks
 
 Consider an enum class:
 
@@ -60,11 +59,9 @@ std::string_view to_string(rgba_color_channel channel) {
 }
 ```
 
-The necessary repetition of the class enum name reduces legibility by
-introducing noise in contexts where the enum class is obvious.
+The necessary repetition of the class enum name reduces legibility by introducing noise in contexts where the enum class is obvious.
 
-To eliminate the noise penalty for introducing long (but descriptive) `enum class`
-names, this paper proposes that the statement
+To eliminate the noise penalty for introducing long (but descriptive) `enum class` names, this paper proposes that the statement
 
 ```cpp
 using enum rgba_color_channel;
@@ -78,8 +75,7 @@ Furthermore, the syntax
 using rgba_color_channel::red;
 ```
 
-should bring the identifier `red` into the local scope, so that it may be used
-unqualified.
+should bring the identifier `red` into the local scope, so that it may be used unqualified.
 
 The above example would then probably be written as
 
@@ -102,24 +98,15 @@ Rationale {#rationale}
 Consistency {#consistency}
 -----------
 
-`enum class`es, as well as plain old `enum`s, are not classes - they seem to be
-closer to namespaces consisting of `static constexpr` inline variables. The
-familiar `using` syntax that works for namespaces should therefore apply to
-them as well, in some fashion.
+`enum class`es, as well as plain old `enum`s, are not classes - they seem to be closer to namespaces consisting of `static constexpr` inline variables. The familiar `using` syntax that works for namespaces should therefore apply to them as well, in some fashion.
 
 
 Better Identifiers {#betterids}
 ------------------
 
-The introduction of this feature would allow better naming of enums. Currently,
-enums are named with as short an identifier as possible, often to the point
-of absurdity, when they are reduced to completely nondescriptive abbreviations
-that only hint at their proper meaning (just what does `zfqc::add_op` mean?)
+The introduction of this feature would allow better naming of enums. Currently, enums are named with as short an identifier as possible, often to the point of absurdity, when they are reduced to completely nondescriptive abbreviations that only hint at their proper meaning. (Just what does `zfqc::add_op` really mean?)
 
-With this feature, identifiers become available to unqualified lookup in local
-contexts where their source is obvious, giving control of lookup style back to
-the user of the enum, instead of baking name semantics into the type of the
-enum.
+With this feature, identifiers become available to unqualified lookup in local contexts where their source is obvious, giving control of lookup style back to the user of the enum, instead of baking name semantics into the type of the enum.
 
 
 Evidence of Need {#need}
@@ -127,9 +114,7 @@ Evidence of Need {#need}
 At a casual search, we were able to locate this
 [thread on stackoverflow](https://stackoverflow.com/questions/9450338/equivalent-of-using-namespace-x-for-scoped-enumerations).
 
-Anecdotally, 100% of people the authors have shown this to (~30) at CppCon have
-displayed a very enthusiastic response, with frequent comments of "I'd use enum
-classes but they are too verbose, this solves my problem!"
+Anecdotally, 100% of people the authors have shown this to (~30) at CppCon have displayed a very enthusiastic response, with frequent comments of "I'd use enum classes but they are too verbose, this solves my problem!"
 
 
 Proposal {#proposal}
@@ -144,9 +129,7 @@ We propose the addition of a new `using enum` statement:
 using enum IDENTIFIER;
 ```
 
-The above statement introduces the members of the enumeration `IDENTIFIER` into
-the local namespace, thus enabling lookup without qualification. As usual, a
-name lookup ambiguity makes the program ill-formed (diagnostic required).
+The above statement introduces the members of the enumeration `IDENTIFIER` into the local namespace, thus enabling lookup without qualification. As usual, a name lookup ambiguity makes the program ill-formed (diagnostic required).
 
 
 Syntax: `using ENUM_ID::IDENTIFIER` {#using-id}
@@ -158,15 +141,11 @@ We propose to allow the syntax of
 using ENUM_ID::IDENTIFIER
 ```
 
-to introduce the `IDENTIFIER` into the local namespace, aliasing
-`ENUM_ID::IDENTIFIER`.
+to introduce the `IDENTIFIER` into the local namespace, aliasing `ENUM_ID::IDENTIFIER`.
 
-This would mirror the current syntax for introducing namespaced names into the
-current scope.
+This would mirror the current syntax for introducing namespaced names into the current scope.
 
-Note: this does not conflict with [[P0945R0]], because that paper only deals
-with the syntax `using name = id-expression`, which duplicates the enumerator
-name.
+Note: this does not conflict with [[P0945R0]], because that paper only deals with the syntax `using name = id-expression`, which duplicates the enumerator name.
 
 
 Frequently Asked Questions {#faq}
@@ -187,8 +166,7 @@ class foo {
 };
 ```
 
-which were superceeded by scoped enums. With this feature one can bring `A`,
-`B` and `C` into the local scope by invoking:
+which was superceeded by scoped enums. With the feature this paper proposes one can bring `A`, `B` and `C` into the local scope by invoking:
 
 ```cpp
 using enum foo::bar;
@@ -196,7 +174,7 @@ using enum foo::bar;
 
 
 Are you proposing mirroring the namespace alias syntax as well? {#faq-ns-alias}
----------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 No. We already have a way to do that, and it looks like this:
 
@@ -204,19 +182,17 @@ No. We already have a way to do that, and it looks like this:
 using my_alias = my::name_space::enum_name;
 ```
 
-In addition, [[P0945R0]] proposes deprecating namespace aliases in favor of
-generalized `using name = id_expression`, so doing this would go counter the
-current movement of the standard.
+In addition, [[P0945R0]] proposes deprecating namespace aliases in favor of generalized `using name = id_expression`, so doing this would go counter the current movement of the standard.
+
 
 Why not allow `using enum struct/class ENUM_ID;`? {#faq-using-enum-struct}
----------------------------------------------------
+--------------------------------------------------------------------------
 
-Because it's a needless complication and would introduce another layer of
-"struct & class don't match" linter errors.
+Because would have been a needless complication and would introduce another layer of "`struct` and `class` don't match" linter errors that current `class`es and `struct`s already have with forward declarations.
 
 
 Why propose `using ENUM_ID::IDENTIFIER` at all? {#faq-using-decl-why}
------------------------------------------------
+---------------------------------------------------------------------
 
 ... given that the following already works:
 
@@ -225,14 +201,12 @@ Why propose `using ENUM_ID::IDENTIFIER` at all? {#faq-using-decl-why}
 ```
 
 and that, given [[P0945R0]], this will work:
+
 ```cpp
   using red = rgba_color_channel::red;
 ```
 
-The reason is "DRY" - don't repeat yourself. You're forced to repeat the name of
-the enumerator. That said, the authors are perfectly willing to throw this part
-of the paper out if the `using enum ENUM_ID` piece gets consensus and this is
-the stumbling block.
+The reason is "DRY" - don't repeat yourself - one is forced to repeat the name of the enumerator. That said, the authors are perfectly willing to throw this part of the paper out if the `using enum ENUM_ID` piece gets consensus and this is the stumbling block.
 
 
 Proposed Wording {#wording}
@@ -242,8 +216,7 @@ Preface {#wording-preface}
 ------------------
 The authors are new at this, and welcome suggestions for wording.
 
-The intention is to effectively mirror the wording for namespaces from
-[namespace.udir], and pare it down to only things that apply to enumerators.
+The intention is to effectively mirror the wording for namespaces from [namespace.udir], and pare it down to only things that apply to enumerators.
 
 All wording is relative to the working draft of the ISO/IEC IS 14882: N4765.
 
@@ -251,8 +224,7 @@ All wording is relative to the working draft of the ISO/IEC IS 14882: N4765.
 Changes required to add `using enum IDENTIFIER;` {#wording-enumdirect}
 ----------------
 
-In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Directive", with
-the stable reference "[enum.udir]".
+In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Directive", with the stable reference "[enum.udir]".
 
 Add:
 
@@ -318,9 +290,7 @@ Then add:
 Acknowledgements {#ack}
 ================
 
-The authors would like to thank Marcel Ebmer and Lisa Lippincott for early
-feedback, and the members of the BSI C++ WG for further feedback, especially
-Graham Haynes and Barry Revzin.
+The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him.
 
 <!--
  vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
