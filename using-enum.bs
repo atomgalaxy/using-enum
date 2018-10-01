@@ -38,7 +38,7 @@ Motivation {#motivation}
 
 > The single biggest deterrent to use of scoped enumerations is the inability to associate them with a *using directive*.
 >
-> &nbsp;&nbsp;&nbsp;&nbsp;&emdash; Dan Saks
+> &nbsp;&nbsp;&nbsp;&nbsp;&mdash; Dan Saks
 
 Consider an enum class:
 
