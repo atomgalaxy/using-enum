@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>p1099R2: Using Enum</title>
+  <title>P1099R3: Using Enum</title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -992,57 +992,93 @@ Possible extra rowspan handling
 	.toc > li li          { font-weight: normal; }
 	.toc > li li li       { font-size:   95%;    }
 	.toc > li li li li    { font-size:   90%;    }
+	.toc > li li li li .secno { font-size: 85%; }
 	.toc > li li li li li { font-size:   85%;    }
+	.toc > li li li li li .secno { font-size: 100%; }
 
-	.toc > li             { margin: 1.5rem 0;    }
-	.toc > li li          { margin: 0.3rem 0;    }
-	.toc > li li li       { margin-left: 2rem;   }
+	/* @supports not (display:grid) { */
+		.toc > li             { margin: 1.5rem 0;    }
+		.toc > li li          { margin: 0.3rem 0;    }
+		.toc > li li li       { margin-left: 2rem;   }
 
-	/* Section numbers in a column of their own */
-	.toc .secno {
-		float: left;
-		width: 4rem;
-		white-space: nowrap;
-	}
-	.toc > li li li li .secno {
-		font-size: 85%;
-	}
-	.toc > li li li li li .secno {
-		font-size: 100%;
-	}
+		/* Section numbers in a column of their own */
+		.toc .secno {
+			float: left;
+			width: 4rem;
+			white-space: nowrap;
+		}
 
-	:not(li) > .toc              { margin-left:  5rem; }
-	.toc .secno                  { margin-left: -5rem; }
-	.toc > li li li .secno       { margin-left: -7rem; }
-	.toc > li li li li .secno    { margin-left: -9rem; }
-	.toc > li li li li li .secno { margin-left: -11rem; }
+		.toc li {
+			clear: both;
+		}
 
-	/* Tighten up indentation in narrow ToCs */
-	@media (max-width: 30em) {
-		:not(li) > .toc              { margin-left:  4rem; }
-		.toc .secno                  { margin-left: -4rem; }
-		.toc > li li li              { margin-left:  1rem; }
-		.toc > li li li .secno       { margin-left: -5rem; }
-		.toc > li li li li .secno    { margin-left: -6rem; }
-		.toc > li li li li li .secno { margin-left: -7rem; }
-	}
-	@media screen and (min-width: 78em) {
-		body:not(.toc-inline) :not(li) > .toc              { margin-left:  4rem; }
-		body:not(.toc-inline) .toc .secno                  { margin-left: -4rem; }
-		body:not(.toc-inline) .toc > li li li              { margin-left:  1rem; }
-		body:not(.toc-inline) .toc > li li li .secno       { margin-left: -5rem; }
-		body:not(.toc-inline) .toc > li li li li .secno    { margin-left: -6rem; }
-		body:not(.toc-inline) .toc > li li li li li .secno { margin-left: -7rem; }
-	}
-	body.toc-sidebar #toc :not(li) > .toc              { margin-left:  4rem; }
-	body.toc-sidebar #toc .toc .secno                  { margin-left: -4rem; }
-	body.toc-sidebar #toc .toc > li li li              { margin-left:  1rem; }
-	body.toc-sidebar #toc .toc > li li li .secno       { margin-left: -5rem; }
-	body.toc-sidebar #toc .toc > li li li li .secno    { margin-left: -6rem; }
-	body.toc-sidebar #toc .toc > li li li li li .secno { margin-left: -7rem; }
+		:not(li) > .toc              { margin-left:  5rem; }
+		.toc .secno                  { margin-left: -5rem; }
+		.toc > li li li .secno       { margin-left: -7rem; }
+		.toc > li li li li .secno    { margin-left: -9rem; }
+		.toc > li li li li li .secno { margin-left: -11rem; }
 
-	.toc li {
-		clear: both;
+		/* Tighten up indentation in narrow ToCs */
+		@media (max-width: 30em) {
+			:not(li) > .toc              { margin-left:  4rem; }
+			.toc .secno                  { margin-left: -4rem; }
+			.toc > li li li              { margin-left:  1rem; }
+			.toc > li li li .secno       { margin-left: -5rem; }
+			.toc > li li li li .secno    { margin-left: -6rem; }
+			.toc > li li li li li .secno { margin-left: -7rem; }
+		}
+	/* } */
+
+	@supports (display:grid) {
+		/* Use #toc over .toc to override non-@supports rules. */
+		#toc {
+			display: grid;
+			align-content: start;
+			grid-template-columns: auto 1fr;
+			grid-column-gap: 1rem;
+			column-gap: 1rem;
+			grid-row-gap: .6rem;
+			row-gap: .6rem;
+		}
+		#toc h2 {
+			grid-column: 1 / -1;
+			margin-bottom: 0;
+		}
+		#toc ol,
+		#toc li,
+		#toc a {
+			display: contents;
+			/* Switch <a> to subgrid when supported */
+		}
+		#toc span {
+			margin: 0;
+		}
+		#toc > .toc > li > a > span {
+			/* The spans of the top-level list,
+			   comprising the first items of each top-level section. */
+			margin-top: 1.1rem;
+		}
+		#toc#toc .secno { /* Ugh, need more specificity to override base.css */
+			grid-column: 1;
+			width: auto;
+			margin-left: 0;
+		}
+		#toc .content {
+			grid-column: 2;
+			width: auto;
+			margin-right: 1rem;
+		}
+		#toc .content:hover {
+			background: rgba(75%, 75%, 75%, .25);
+			border-bottom: 3px solid #054572;
+			margin-bottom: -3px;
+		}
+		#toc li li li .content {
+			margin-left: 1rem;
+		}
+		#toc li li li li .content {
+			margin-left: 2rem;
+		}
 	}
 
 
@@ -1191,9 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 650c7f090a7031056e48b2cf26f91e72b5c14a32" name="generator">
+  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
-  <meta content="7b1bdc9f7cd1269166c2ebabb94b9891a323a015" name="document-revision">
+  <link href="https://isocpp.org/favicon.ico" rel="icon">
+  <meta content="3c210cfcecd49a2e5164b52308bf27ec6e912563" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1252,58 +1289,58 @@ figcaption:not(.no-marker)::before {
 .highlight:not(.idl) { background: hsl(24, 20%, 95%); }
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
-.highlight .c { color: #708090 } /* Comment */
-.highlight .k { color: #990055 } /* Keyword */
-.highlight .l { color: #000000 } /* Literal */
-.highlight .n { color: #0077aa } /* Name */
-.highlight .o { color: #999999 } /* Operator */
-.highlight .p { color: #999999 } /* Punctuation */
-.highlight .cm { color: #708090 } /* Comment.Multiline */
-.highlight .cp { color: #708090 } /* Comment.Preproc */
-.highlight .c1 { color: #708090 } /* Comment.Single */
-.highlight .cs { color: #708090 } /* Comment.Special */
-.highlight .kc { color: #990055 } /* Keyword.Constant */
-.highlight .kd { color: #990055 } /* Keyword.Declaration */
-.highlight .kn { color: #990055 } /* Keyword.Namespace */
-.highlight .kp { color: #990055 } /* Keyword.Pseudo */
-.highlight .kr { color: #990055 } /* Keyword.Reserved */
-.highlight .kt { color: #990055 } /* Keyword.Type */
-.highlight .ld { color: #000000 } /* Literal.Date */
-.highlight .m { color: #000000 } /* Literal.Number */
-.highlight .s { color: #a67f59 } /* Literal.String */
-.highlight .na { color: #0077aa } /* Name.Attribute */
-.highlight .nc { color: #0077aa } /* Name.Class */
-.highlight .no { color: #0077aa } /* Name.Constant */
-.highlight .nd { color: #0077aa } /* Name.Decorator */
-.highlight .ni { color: #0077aa } /* Name.Entity */
-.highlight .ne { color: #0077aa } /* Name.Exception */
-.highlight .nf { color: #0077aa } /* Name.Function */
-.highlight .nl { color: #0077aa } /* Name.Label */
-.highlight .nn { color: #0077aa } /* Name.Namespace */
-.highlight .py { color: #0077aa } /* Name.Property */
-.highlight .nt { color: #669900 } /* Name.Tag */
-.highlight .nv { color: #222222 } /* Name.Variable */
-.highlight .ow { color: #999999 } /* Operator.Word */
-.highlight .mb { color: #000000 } /* Literal.Number.Bin */
-.highlight .mf { color: #000000 } /* Literal.Number.Float */
-.highlight .mh { color: #000000 } /* Literal.Number.Hex */
-.highlight .mi { color: #000000 } /* Literal.Number.Integer */
-.highlight .mo { color: #000000 } /* Literal.Number.Oct */
-.highlight .sb { color: #a67f59 } /* Literal.String.Backtick */
-.highlight .sc { color: #a67f59 } /* Literal.String.Char */
-.highlight .sd { color: #a67f59 } /* Literal.String.Doc */
-.highlight .s2 { color: #a67f59 } /* Literal.String.Double */
-.highlight .se { color: #a67f59 } /* Literal.String.Escape */
-.highlight .sh { color: #a67f59 } /* Literal.String.Heredoc */
-.highlight .si { color: #a67f59 } /* Literal.String.Interpol */
-.highlight .sx { color: #a67f59 } /* Literal.String.Other */
-.highlight .sr { color: #a67f59 } /* Literal.String.Regex */
-.highlight .s1 { color: #a67f59 } /* Literal.String.Single */
-.highlight .ss { color: #a67f59 } /* Literal.String.Symbol */
-.highlight .vc { color: #0077aa } /* Name.Variable.Class */
-.highlight .vg { color: #0077aa } /* Name.Variable.Global */
-.highlight .vi { color: #0077aa } /* Name.Variable.Instance */
-.highlight .il { color: #000000 } /* Literal.Number.Integer.Long */
+c-[a] { color: #990055 } /* Keyword.Declaration */
+c-[b] { color: #990055 } /* Keyword.Type */
+c-[c] { color: #708090 } /* Comment */
+c-[d] { color: #708090 } /* Comment.Multiline */
+c-[e] { color: #0077aa } /* Name.Attribute */
+c-[f] { color: #669900 } /* Name.Tag */
+c-[g] { color: #222222 } /* Name.Variable */
+c-[k] { color: #990055 } /* Keyword */
+c-[l] { color: #000000 } /* Literal */
+c-[m] { color: #000000 } /* Literal.Number */
+c-[n] { color: #0077aa } /* Name */
+c-[o] { color: #999999 } /* Operator */
+c-[p] { color: #999999 } /* Punctuation */
+c-[s] { color: #a67f59 } /* Literal.String */
+c-[t] { color: #a67f59 } /* Literal.String.Single */
+c-[u] { color: #a67f59 } /* Literal.String.Double */
+c-[cp] { color: #708090 } /* Comment.Preproc */
+c-[c1] { color: #708090 } /* Comment.Single */
+c-[cs] { color: #708090 } /* Comment.Special */
+c-[kc] { color: #990055 } /* Keyword.Constant */
+c-[kn] { color: #990055 } /* Keyword.Namespace */
+c-[kp] { color: #990055 } /* Keyword.Pseudo */
+c-[kr] { color: #990055 } /* Keyword.Reserved */
+c-[ld] { color: #000000 } /* Literal.Date */
+c-[nc] { color: #0077aa } /* Name.Class */
+c-[no] { color: #0077aa } /* Name.Constant */
+c-[nd] { color: #0077aa } /* Name.Decorator */
+c-[ni] { color: #0077aa } /* Name.Entity */
+c-[ne] { color: #0077aa } /* Name.Exception */
+c-[nf] { color: #0077aa } /* Name.Function */
+c-[nl] { color: #0077aa } /* Name.Label */
+c-[nn] { color: #0077aa } /* Name.Namespace */
+c-[py] { color: #0077aa } /* Name.Property */
+c-[ow] { color: #999999 } /* Operator.Word */
+c-[mb] { color: #000000 } /* Literal.Number.Bin */
+c-[mf] { color: #000000 } /* Literal.Number.Float */
+c-[mh] { color: #000000 } /* Literal.Number.Hex */
+c-[mi] { color: #000000 } /* Literal.Number.Integer */
+c-[mo] { color: #000000 } /* Literal.Number.Oct */
+c-[sb] { color: #a67f59 } /* Literal.String.Backtick */
+c-[sc] { color: #a67f59 } /* Literal.String.Char */
+c-[sd] { color: #a67f59 } /* Literal.String.Doc */
+c-[se] { color: #a67f59 } /* Literal.String.Escape */
+c-[sh] { color: #a67f59 } /* Literal.String.Heredoc */
+c-[si] { color: #a67f59 } /* Literal.String.Interpol */
+c-[sx] { color: #a67f59 } /* Literal.String.Other */
+c-[sr] { color: #a67f59 } /* Literal.String.Regex */
+c-[ss] { color: #a67f59 } /* Literal.String.Symbol */
+c-[vc] { color: #0077aa } /* Name.Variable.Class */
+c-[vg] { color: #0077aa } /* Name.Variable.Global */
+c-[vi] { color: #0077aa } /* Name.Variable.Instance */
+c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 </style>
 <style>/* style-selflinks */
 
@@ -1416,8 +1453,8 @@ pre .property::before, pre .property::after {
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">p1099R2<br>Using Enum</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2018-09-01">1 September 2018</time></span></h2>
+   <h1 class="p-name no-ref" id="title">P1099R3<br>Using Enum</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2019-01-20">2019-01-20</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1430,7 +1467,7 @@ pre .property::before, pre .property::after {
      <dt>Audience:
      <dd>SG1, EWG
      <dt>Project:
-     <dd>ISO JTC1/SC22/WG21: Programming Language C++
+     <dd>ISO/IEC JTC1/SC22/WG21 14882: Programming Language — C++
     </dl>
    </div>
    <div data-fill-with="warning"></div>
@@ -1455,25 +1492,32 @@ pre .property::before, pre .property::after {
     <li>
      <a href="#proposal"><span class="secno">4</span> <span class="content">Proposal</span></a>
      <ol class="toc">
-      <li><a href="#using-enum-id"><span class="secno">4.1</span> <span class="content">Syntax: <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span></code></span></a>
-      <li><a href="#using-id"><span class="secno">4.2</span> <span class="content">Syntax: <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code></span></a>
+      <li><a href="#using-enum-id"><span class="secno">4.1</span> <span class="content">Syntax: <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-></code></span></a>
+      <li><a href="#using-id"><span class="secno">4.2</span> <span class="content">Syntax: <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-></code></span></a>
      </ol>
     <li>
-     <a href="#faq"><span class="secno">5</span> <span class="content">Frequently Asked Questions</span></a>
+     <a href="#examples"><span class="secno">5</span> <span class="content">Examples</span></a>
      <ol class="toc">
-      <li><a href="#faq-old-enum"><span class="secno">5.1</span> <span class="content">Can I do this with unscoped enums?</span></a>
-      <li><a href="#faq-ns-alias"><span class="secno">5.2</span> <span class="content">Are you proposing mirroring the namespace alias syntax as well?</span></a>
-      <li><a href="#faq-using-enum-struct"><span class="secno">5.3</span> <span class="content">Why not allow <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="k">struct</span><span class="o">/</span><span class="k">class</span> <span class="nc">ENUM_ID</span><span class="p">;</span></code>?</span></a>
-      <li><a href="#faq-using-decl-why"><span class="secno">5.4</span> <span class="content">Why propose <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code> at all?</span></a>
+      <li><a href="#strong-enums-global-ids"><span class="secno">5.1</span> <span class="content">Strongly typed enums with global identifiers</span></a>
+      <li><a href="#no-prefix-switches"><span class="secno">5.2</span> <span class="content">Switching with no syntax overhead</span></a>
      </ol>
     <li>
-     <a href="#wording"><span class="secno">6</span> <span class="content">Proposed Wording</span></a>
+     <a href="#faq"><span class="secno">6</span> <span class="content">Frequently Asked Questions</span></a>
      <ol class="toc">
-      <li><a href="#wording-preface"><span class="secno">6.1</span> <span class="content">Preface</span></a>
-      <li><a href="#wording-enumdirect"><span class="secno">6.2</span> <span class="content">Changes required to add <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span><span class="p">;</span></code></span></a>
-      <li><a href="#wording-enumdecl"><span class="secno">6.3</span> <span class="content">Changes required to add <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span><span class="p">;</span></code></span></a>
+      <li><a href="#faq-impl"><span class="secno">6.1</span> <span class="content">Has this been implemented?</span></a>
+      <li><a href="#faq-old-enum"><span class="secno">6.2</span> <span class="content">Can I do this with unscoped enums?</span></a>
+      <li><a href="#faq-ns-alias"><span class="secno">6.3</span> <span class="content">Are you proposing mirroring the namespace alias syntax as well?</span></a>
+      <li><a href="#faq-using-enum-struct"><span class="secno">6.4</span> <span class="content">Why not allow <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- k>struct</c-><c- o>/</c-><c- k>class</c-> <c- nc>ENUM_ID</c-><c- p>;</c-></code>?</span></a>
+      <li><a href="#faq-using-decl-why"><span class="secno">6.5</span> <span class="content">Why propose <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-></code> at all?</span></a>
      </ol>
-    <li><a href="#ack"><span class="secno">7</span> <span class="content">Acknowledgements</span></a>
+    <li>
+     <a href="#wording"><span class="secno">7</span> <span class="content">Proposed Wording</span></a>
+     <ol class="toc">
+      <li><a href="#wording-preface"><span class="secno">7.1</span> <span class="content">Preface</span></a>
+      <li><a href="#wording-enumdirect"><span class="secno">7.2</span> <span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-><c- p>;</c-></code></span></a>
+      <li><a href="#wording-enumdecl"><span class="secno">7.3</span> <span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-><c- p>;</c-></code></span></a>
+     </ol>
+    <li><a href="#ack"><span class="secno">8</span> <span class="content">Acknowledgements</span></a>
     <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
@@ -1484,9 +1528,9 @@ pre .property::before, pre .property::after {
   <main>
    <h2 class="heading settled" data-level="1" id="history"><span class="secno">1. </span><span class="content">Revision History</span><a class="self-link" href="#history"></a></h2>
    <ul>
-    <li data-md="">
+    <li data-md>
      <p>r1: Typos. Changed target from LEWG to EWG.</p>
-    <li data-md="">
+    <li data-md>
      <p>r2: Added FAQ and wording, and extended to regular enums.</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="motivation"><span class="secno">2. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h2>
@@ -1495,95 +1539,135 @@ pre .property::before, pre .property::after {
     <p>    — Dan Saks</p>
    </blockquote>
    <p>Consider an enum class:</p>
-<pre class="language-cpp highlight"><span class="k">enum</span> <span class="k">class</span> <span class="nc">rgba_color_channel</span> <span class="p">{</span> <span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">alpha</span> <span class="p">};</span>
+<pre class="language-cpp highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>rgba_color_channel</c-> <c- p>{</c-> <c- n>red</c-><c- p>,</c-> <c- n>green</c-><c- p>,</c-> <c- n>blue</c-><c- p>,</c-> <c- n>alpha</c-> <c- p>};</c->
 </pre>
    <p>Currently, a switch using this enum looks as follows:</p>
-<pre class="language-cpp highlight"><span class="n">std</span><span class="o">::</span><span class="n">string_view</span> <span class="n">to_string</span><span class="p">(</span><span class="n">rgba_color_channel</span> <span class="n">channel</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">switch</span> <span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="nl">red</span><span class="p">:</span>   <span class="k">return</span> <span class="s">"red"</span><span class="p">;</span>
-    <span class="k">case</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="nl">green</span><span class="p">:</span> <span class="k">return</span> <span class="s">"green"</span><span class="p">;</span>
-    <span class="k">case</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="nl">blue</span><span class="p">:</span>  <span class="k">return</span> <span class="s">"blue"</span><span class="p">;</span>
-    <span class="k">case</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="nl">alpha</span><span class="p">:</span> <span class="k">return</span> <span class="s">"alpha"</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<pre class="language-cpp highlight"><c- n>std</c-><c- o>::</c-><c- n>string_view</c-> <c- n>to_string</c-><c- p>(</c-><c- n>rgba_color_channel</c-> <c- n>channel</c-><c- p>)</c-> <c- p>{</c->
+  <c- k>switch</c-> <c- p>(</c-><c- n>channel</c-><c- p>)</c-> <c- p>{</c->
+    <c- k>case</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- nl>red</c-><c- p>:</c->   <c- k>return</c-> <c- s>"red"</c-><c- p>;</c->
+    <c- k>case</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- nl>green</c-><c- p>:</c-> <c- k>return</c-> <c- s>"green"</c-><c- p>;</c->
+    <c- k>case</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- nl>blue</c-><c- p>:</c->  <c- k>return</c-> <c- s>"blue"</c-><c- p>;</c->
+    <c- k>case</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- nl>alpha</c-><c- p>:</c-> <c- k>return</c-> <c- s>"alpha"</c-><c- p>;</c->
+  <c- p>}</c->
+<c- p>}</c->
 </pre>
    <p>The necessary repetition of the class enum name reduces legibility by introducing noise in contexts where the enum class is obvious.</p>
-   <p>To eliminate the noise penalty for introducing long (but descriptive) <code class="highlight"><span class="k">enum</span> <span class="k">class</span></code> names, this paper proposes that the statement</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">rgba_color_channel</span><span class="p">;</span>
+   <p>To eliminate the noise penalty for introducing long (but descriptive) <code class="highlight"><c- k>enum</c-> <c- k>class</c-></code> names, this paper proposes that the statement</p>
+<pre class="language-cpp highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>rgba_color_channel</c-><c- p>;</c->
 </pre>
    <p>introduce the enum member identifiers into the local scope so that they may be referred to unqualified.</p>
    <p>Furthermore, the syntax</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="n">red</span><span class="p">;</span>
+<pre class="language-cpp highlight"><c- k>using</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- n>red</c-><c- p>;</c->
 </pre>
-   <p>should bring the identifier <code class="highlight"><span class="n">red</span></code> into the local scope, so that it may be used unqualified.</p>
+   <p>should bring the identifier <code class="highlight"><c- n>red</c-></code> into the local scope, so that it may be used unqualified.</p>
    <p>The above example would then probably be written as</p>
-<pre class="language-cpp highlight"><span class="n">std</span><span class="o">::</span><span class="n">string_view</span> <span class="n">to_string</span><span class="p">(</span><span class="n">rgba_color_channel</span> <span class="n">channel</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">switch</span> <span class="p">(</span><span class="n">my_channel</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">using</span> <span class="k">enum</span> <span class="n">rgba_color_channel</span><span class="p">;</span>
-    <span class="k">case</span> <span class="nl">red</span><span class="p">:</span>   <span class="k">return</span> <span class="s">"red"</span><span class="p">;</span>
-    <span class="k">case</span> <span class="nl">green</span><span class="p">:</span> <span class="k">return</span> <span class="s">"green"</span><span class="p">;</span>
-    <span class="k">case</span> <span class="nl">blue</span><span class="p">:</span>  <span class="k">return</span> <span class="s">"blue"</span><span class="p">;</span>
-    <span class="k">case</span> <span class="nl">alpha</span><span class="p">:</span> <span class="k">return</span> <span class="s">"alpha"</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<pre class="language-cpp highlight"><c- n>std</c-><c- o>::</c-><c- n>string_view</c-> <c- n>to_string</c-><c- p>(</c-><c- n>rgba_color_channel</c-> <c- n>channel</c-><c- p>)</c-> <c- p>{</c->
+  <c- k>switch</c-> <c- p>(</c-><c- n>my_channel</c-><c- p>)</c-> <c- p>{</c->
+    <c- k>using</c-> <c- k>enum</c-> <c- n>rgba_color_channel</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>red</c-><c- p>:</c->   <c- k>return</c-> <c- s>"red"</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>green</c-><c- p>:</c-> <c- k>return</c-> <c- s>"green"</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>blue</c-><c- p>:</c->  <c- k>return</c-> <c- s>"blue"</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>alpha</c-><c- p>:</c-> <c- k>return</c-> <c- s>"alpha"</c-><c- p>;</c->
+  <c- p>}</c->
+<c- p>}</c->
 </pre>
    <h2 class="heading settled" data-level="3" id="rationale"><span class="secno">3. </span><span class="content">Rationale</span><a class="self-link" href="#rationale"></a></h2>
    <h3 class="heading settled" data-level="3.1" id="consistency"><span class="secno">3.1. </span><span class="content">Consistency</span><a class="self-link" href="#consistency"></a></h3>
-   <p><code class="highlight"><span class="k">enum</span> <span class="k">class</span></code>es, as well as plain old <code class="highlight"><span class="k">enum</span></code>s, are not classes - they seem to be closer to namespaces consisting of <code class="highlight"><span class="k">static</span> <span class="k">constexpr</span></code> inline variables. The familiar <code class="highlight"><span class="k">using</span></code> syntax that works for namespaces should therefore apply to them as well, in some fashion.</p>
+   <p><code class="highlight"><c- k>enum</c-> <c- k>class</c-></code>es, as well as plain old <code class="highlight"><c- k>enum</c-></code>s, are not classes - they seem to be closer to namespaces consisting of <code class="highlight"><c- k>static</c-> <c- k>constexpr</c-></code> inline variables. The familiar <code class="highlight"><c- k>using</c-></code> syntax that works for namespaces should therefore apply to them as well, in some fashion.</p>
    <h3 class="heading settled" data-level="3.2" id="betterids"><span class="secno">3.2. </span><span class="content">Better Identifiers</span><a class="self-link" href="#betterids"></a></h3>
-   <p>The introduction of this feature would allow better naming of enums. Currently, enums are named with as short an identifier as possible, often to the point of absurdity, when they are reduced to completely nondescriptive abbreviations that only hint at their proper meaning. (Just what does <code class="highlight"><span class="n">zfqc</span><span class="o">::</span><span class="n">add_op</span></code> really mean?)</p>
+   <p>The introduction of this feature would allow better naming of enums. Currently, enums are named with as short an identifier as possible, often to the point of absurdity, when they are reduced to completely nondescriptive abbreviations that only hint at their proper meaning. (Just what does <code class="highlight"><c- n>zfqc</c-><c- o>::</c-><c- n>add_op</c-></code> really mean?)</p>
    <p>With this feature, identifiers become available to unqualified lookup in local contexts where their source is obvious, giving control of lookup style back to the user of the enum, instead of baking name semantics into the type of the enum.</p>
    <h3 class="heading settled" data-level="3.3" id="need"><span class="secno">3.3. </span><span class="content">Evidence of Need</span><a class="self-link" href="#need"></a></h3>
     At a casual search, we were able to locate this <a href="https://stackoverflow.com/questions/9450338/equivalent-of-using-namespace-x-for-scoped-enumerations">thread on stackoverflow</a>. 
    <p>Anecdotally, 100% of people the authors have shown this to (~30) at CppCon have displayed a very enthusiastic response, with frequent comments of "I’d use enum classes but they are too verbose, this solves my problem!"</p>
    <h2 class="heading settled" data-level="4" id="proposal"><span class="secno">4. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
-   <h3 class="heading settled" data-level="4.1" id="using-enum-id"><span class="secno">4.1. </span><span class="content">Syntax: <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span></code></span><a class="self-link" href="#using-enum-id"></a></h3>
-   <p>We propose the addition of a new <code class="highlight"><span class="k">using</span> <span class="k">enum</span></code> statement:</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span><span class="p">;</span>
+   <h3 class="heading settled" data-level="4.1" id="using-enum-id"><span class="secno">4.1. </span><span class="content">Syntax: <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-></code></span><a class="self-link" href="#using-enum-id"></a></h3>
+   <p>We propose the addition of a new <code class="highlight"><c- k>using</c-> <c- k>enum</c-></code> statement:</p>
+<pre class="language-cpp highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-><c- p>;</c->
 </pre>
-   <p>The above statement introduces the members of the enumeration <code class="highlight"><span class="n">IDENTIFIER</span></code> into the local namespace, thus enabling lookup without qualification. As usual, a name lookup ambiguity makes the program ill-formed (diagnostic required).</p>
-   <h3 class="heading settled" data-level="4.2" id="using-id"><span class="secno">4.2. </span><span class="content">Syntax: <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code></span><a class="self-link" href="#using-id"></a></h3>
+   <p>The above statement introduces the members of the enumeration <code class="highlight"><c- n>IDENTIFIER</c-></code> into the local namespace, thus enabling lookup without qualification. As usual, a name lookup ambiguity makes the program ill-formed (diagnostic required).</p>
+   <h3 class="heading settled" data-level="4.2" id="using-id"><span class="secno">4.2. </span><span class="content">Syntax: <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-></code></span><a class="self-link" href="#using-id"></a></h3>
    <p>We propose to allow the syntax of</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span>
+<pre class="language-cpp highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c->
 </pre>
-   <p>to introduce the <code class="highlight"><span class="n">IDENTIFIER</span></code> into the local namespace, aliasing <code class="highlight"><span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code>.</p>
+   <p>to introduce the <code class="highlight"><c- n>IDENTIFIER</c-></code> into the local namespace, aliasing <code class="highlight"><c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-></code>.</p>
    <p>This would mirror the current syntax for introducing namespaced names into the current scope.</p>
-   <p class="note" role="note"><span>Note:</span> this does not conflict with <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a>, because that paper only deals with the syntax <code class="highlight"><span class="k">using</span> <span class="n">name</span> <span class="o">=</span> <span class="n">id</span><span class="o">-</span><span class="n">expression</span></code>, which duplicates the enumerator name.</p>
-   <h2 class="heading settled" data-level="5" id="faq"><span class="secno">5. </span><span class="content">Frequently Asked Questions</span><a class="self-link" href="#faq"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="faq-old-enum"><span class="secno">5.1. </span><span class="content">Can I do this with unscoped enums?</span><a class="self-link" href="#faq-old-enum"></a></h3>
+   <p class="note" role="note"><span>Note:</span> this does not conflict with <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a>, because that paper only deals with the syntax <code class="highlight"><c- k>using</c-> <c- n>name</c-> <c- o>=</c-> <c- n>id</c-><c- o>-</c-><c- n>expression</c-></code>, which duplicates the enumerator name.</p>
+   <h2 class="heading settled" data-level="5" id="examples"><span class="secno">5. </span><span class="content">Examples</span><a class="self-link" href="#examples"></a></h2>
+   <h3 class="heading settled" data-level="5.1" id="strong-enums-global-ids"><span class="secno">5.1. </span><span class="content">Strongly typed enums with global identifiers</span><a class="self-link" href="#strong-enums-global-ids"></a></h3>
+   <p>This proposal lets you make strongly-typed enums still export their identifiers to namespace scope, therefore behaving like the old enums in that respect:</p>
+<pre class="highlight"><c- k>namespace</c-> <c- n>my_lib</c-> <c- p>{</c->
+
+<c- k>enum</c-> <c- k>class</c-> <c- nc>errcode</c-> <c- p>{</c->
+  <c- n>SUCCESS</c-> <c- o>=</c-> <c- mi>0</c-><c- p>,</c->
+  <c- n>ENOMEM</c-> <c- o>=</c-> <c- mi>1</c-><c- p>,</c->
+  <c- n>EAGAIN</c-> <c- o>=</c-> <c- mi>2</c-><c- p>,</c->
+  <c- n>ETOOSLOW</c-> <c- o>=</c-> <c- mi>3</c->
+<c- p>};</c->
+<c- k>using</c-> <c- k>enum</c-> <c- n>errcode</c-><c- p>;</c->
+
+<c- p>}</c->
+
+<c- k>namespace</c-> <c- n>foo</c-> <c- p>{</c->
+
+<c- n>my_lib</c-><c- o>::</c-><c- n>errcode</c-> <c- n>get_widget</c-><c- p>()</c-> <c- p>{</c->
+  <c- k>using</c-> <c- k>namespace</c-> <c- n>my_lib</c-><c- p>;</c->
+  <c- k>return</c-> <c- n>ETOOSLOW</c-><c- p>;</c-> <c- c1>// works, and conversions to int don’t.</c->
+<c- p>}</c->
+
+<c- p>}</c->
+</pre>
+   <h3 class="heading settled" data-level="5.2" id="no-prefix-switches"><span class="secno">5.2. </span><span class="content">Switching with no syntax overhead</span><a class="self-link" href="#no-prefix-switches"></a></h3>
+   <p>The proposal allows for importing enums inside the switch body, which is a scope, and using them for labels:</p>
+<pre class="language-cpp highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>rgba_color_channel</c-> <c- p>{</c-> <c- n>red</c-><c- p>,</c-> <c- n>green</c-><c- p>,</c-> <c- n>blue</c-><c- p>,</c-> <c- n>alpha</c-><c- p>};</c->
+
+<c- n>std</c-><c- o>::</c-><c- n>string_view</c-> <c- n>to_string</c-><c- p>(</c-><c- n>rgba_color_channel</c-> <c- n>channel</c-><c- p>)</c-> <c- p>{</c->
+  <c- k>switch</c-> <c- p>(</c-><c- n>my_channel</c-><c- p>)</c-> <c- p>{</c->
+    <c- k>using</c-> <c- k>enum</c-> <c- n>rgba_color_channel</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>red</c-><c- p>:</c->   <c- k>return</c-> <c- s>"red"</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>green</c-><c- p>:</c-> <c- k>return</c-> <c- s>"green"</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>blue</c-><c- p>:</c->  <c- k>return</c-> <c- s>"blue"</c-><c- p>;</c->
+    <c- k>case</c-> <c- nl>alpha</c-><c- p>:</c-> <c- k>return</c-> <c- s>"alpha"</c-><c- p>;</c->
+  <c- p>}</c->
+<c- p>}</c->
+</pre>
+   <h2 class="heading settled" data-level="6" id="faq"><span class="secno">6. </span><span class="content">Frequently Asked Questions</span><a class="self-link" href="#faq"></a></h2>
+   <h3 class="heading settled" data-level="6.1" id="faq-impl"><span class="secno">6.1. </span><span class="content">Has this been implemented?</span><a class="self-link" href="#faq-impl"></a></h3>
+   <p>Yes. The author has an implementation in clang. It has not been reviewed or released yet, however. There do not seem to be major issues with implementation.</p>
+   <h3 class="heading settled" data-level="6.2" id="faq-old-enum"><span class="secno">6.2. </span><span class="content">Can I do this with unscoped enums?</span><a class="self-link" href="#faq-old-enum"></a></h3>
    <p>Yes. The motivation for that is the pattern</p>
-<pre class="language-cpp highlight"><span class="k">class</span> <span class="nc">foo</span> <span class="p">{</span>
-   <span class="k">enum</span> <span class="n">bar</span> <span class="p">{</span>
-     <span class="n">A</span><span class="p">,</span>
-     <span class="n">B</span><span class="p">,</span>
-     <span class="n">C</span>
-   <span class="p">};</span>
-<span class="p">};</span>
+<pre class="language-cpp highlight"><c- k>class</c-> <c- nc>foo</c-> <c- p>{</c->
+   <c- k>enum</c-> <c- n>bar</c-> <c- p>{</c->
+     <c- n>A</c-><c- p>,</c->
+     <c- n>B</c-><c- p>,</c->
+     <c- n>C</c->
+   <c- p>};</c->
+<c- p>};</c->
 </pre>
-   <p>which was superceeded by scoped enums. With the feature this paper proposes one can bring <code class="highlight"><span class="n">A</span></code>, <code class="highlight"><span class="n">B</span></code> and <code class="highlight"><span class="n">C</span></code> into the local scope by invoking:</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">foo</span><span class="o">::</span><span class="n">bar</span><span class="p">;</span>
+   <p>which was superceeded by scoped enums. With the feature this paper proposes one can bring <code class="highlight"><c- n>A</c-></code>, <code class="highlight"><c- n>B</c-></code> and <code class="highlight"><c- n>C</c-></code> into the local scope by invoking:</p>
+<pre class="language-cpp highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>foo</c-><c- o>::</c-><c- n>bar</c-><c- p>;</c->
 </pre>
-   <h3 class="heading settled" data-level="5.2" id="faq-ns-alias"><span class="secno">5.2. </span><span class="content">Are you proposing mirroring the namespace alias syntax as well?</span><a class="self-link" href="#faq-ns-alias"></a></h3>
+   <h3 class="heading settled" data-level="6.3" id="faq-ns-alias"><span class="secno">6.3. </span><span class="content">Are you proposing mirroring the namespace alias syntax as well?</span><a class="self-link" href="#faq-ns-alias"></a></h3>
    <p>No. We already have a way to do that, and it looks like this:</p>
-<pre class="language-cpp highlight"><span class="k">using</span> <span class="n">my_alias</span> <span class="o">=</span> <span class="n">my</span><span class="o">::</span><span class="n">name_space</span><span class="o">::</span><span class="n">enum_name</span><span class="p">;</span>
+<pre class="language-cpp highlight"><c- k>using</c-> <c- n>my_alias</c-> <c- o>=</c-> <c- n>my</c-><c- o>::</c-><c- n>name_space</c-><c- o>::</c-><c- n>enum_name</c-><c- p>;</c->
 </pre>
-   <p>In addition, <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a> proposes deprecating namespace aliases in favor of generalized <code class="highlight"><span class="k">using</span> <span class="n">name</span> <span class="o">=</span> <span class="n">id_expression</span></code>, so doing this would go counter the current movement of the standard.</p>
-   <h3 class="heading settled" data-level="5.3" id="faq-using-enum-struct"><span class="secno">5.3. </span><span class="content">Why not allow <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="k">struct</span><span class="o">/</span><span class="k">class</span> <span class="nc">ENUM_ID</span><span class="p">;</span></code>?</span><a class="self-link" href="#faq-using-enum-struct"></a></h3>
-   <p>Because would have been a needless complication and would introduce another layer of "<code class="highlight"><span class="k">struct</span></code> and <code class="highlight"><span class="k">class</span></code> don’t match" linter errors that current <code class="highlight"><span class="k">class</span></code>es and <code class="highlight"><span class="k">struct</span></code>s already have with forward declarations.</p>
-   <h3 class="heading settled" data-level="5.4" id="faq-using-decl-why"><span class="secno">5.4. </span><span class="content">Why propose <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span></code> at all?</span><a class="self-link" href="#faq-using-decl-why"></a></h3>
+   <p>In addition, <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a> proposes deprecating namespace aliases in favor of generalized <code class="highlight"><c- k>using</c-> <c- n>name</c-> <c- o>=</c-> <c- n>id_expression</c-></code>, so doing this would go counter the current movement of the standard.</p>
+   <h3 class="heading settled" data-level="6.4" id="faq-using-enum-struct"><span class="secno">6.4. </span><span class="content">Why not allow <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- k>struct</c-><c- o>/</c-><c- k>class</c-> <c- nc>ENUM_ID</c-><c- p>;</c-></code>?</span><a class="self-link" href="#faq-using-enum-struct"></a></h3>
+   <p>Because would have been a needless complication and would introduce another layer of "<code class="highlight"><c- k>struct</c-></code> and <code class="highlight"><c- k>class</c-></code> don’t match" linter errors that current <code class="highlight"><c- k>class</c-></code>es and <code class="highlight"><c- k>struct</c-></code>s already have with forward declarations.</p>
+   <h3 class="heading settled" data-level="6.5" id="faq-using-decl-why"><span class="secno">6.5. </span><span class="content">Why propose <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-></code> at all?</span><a class="self-link" href="#faq-using-decl-why"></a></h3>
    <p>... given that the following already works:</p>
-<pre class="language-cpp highlight">  <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">red</span> <span class="o">=</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="n">red</span><span class="p">;</span>
+<pre class="language-cpp highlight">  <c- k>constexpr</c-> <c- k>auto</c-> <c- n>red</c-> <c- o>=</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- n>red</c-><c- p>;</c->
 </pre>
    <p>and that, given <a data-link-type="biblio" href="#biblio-p0945r0">[P0945R0]</a>, this will work:</p>
-<pre class="language-cpp highlight">  <span class="k">using</span> <span class="n">red</span> <span class="o">=</span> <span class="n">rgba_color_channel</span><span class="o">::</span><span class="n">red</span><span class="p">;</span>
+<pre class="language-cpp highlight">  <c- k>using</c-> <c- n>red</c-> <c- o>=</c-> <c- n>rgba_color_channel</c-><c- o>::</c-><c- n>red</c-><c- p>;</c->
 </pre>
-   <p>The reason is "DRY" - don’t repeat yourself - one is forced to repeat the name of the enumerator. That said, the authors are perfectly willing to throw this part of the paper out if the <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">ENUM_ID</span></code> piece gets consensus and this is the stumbling block.</p>
-   <h2 class="heading settled" data-level="6" id="wording"><span class="secno">6. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
-   <h3 class="heading settled" data-level="6.1" id="wording-preface"><span class="secno">6.1. </span><span class="content">Preface</span><a class="self-link" href="#wording-preface"></a></h3>
+   <p>The reason is "DRY" - don’t repeat yourself - one is forced to repeat the name of the enumerator. That said, the authors are perfectly willing to throw this part of the paper out if the <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>ENUM_ID</c-></code> piece gets consensus and this is the stumbling block.</p>
+   <h2 class="heading settled" data-level="7" id="wording"><span class="secno">7. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
+   <h3 class="heading settled" data-level="7.1" id="wording-preface"><span class="secno">7.1. </span><span class="content">Preface</span><a class="self-link" href="#wording-preface"></a></h3>
     The authors are new at this, and welcome suggestions for wording. 
    <p>The intention is to effectively mirror the wording for namespaces from [namespace.udir], and pare it down to only things that apply to enumerators.</p>
    <p>All wording is relative to the working draft of the ISO/IEC IS 14882: N4765.</p>
-   <h3 class="heading settled" data-level="6.2" id="wording-enumdirect"><span class="secno">6.2. </span><span class="content">Changes required to add <code class="highlight"><span class="k">using</span> <span class="k">enum</span> <span class="n">IDENTIFIER</span><span class="p">;</span></code></span><a class="self-link" href="#wording-enumdirect"></a></h3>
+   <h3 class="heading settled" data-level="7.2" id="wording-enumdirect"><span class="secno">7.2. </span><span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-><c- p>;</c-></code></span><a class="self-link" href="#wording-enumdirect"></a></h3>
    <p>In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Directive", with the stable reference "[enum.udir]".</p>
    <p>Add:</p>
    <div class="ins">
@@ -1591,53 +1675,53 @@ pre .property::before, pre .property::after {
     <tt>using enum</tt>
      <i>nested-name-specifier<sub>opt</sub></i> <i>enum-name</i> 
     <ol>
-     <li data-md="">
+     <li data-md>
       <p>A <i>using-enum-directive</i> shall not appear in class scope, but may appear in namespace scope or in block scope. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>. The <i>enum-name</i> in a <i>using-enum-directive</i> shall name a scoped enumeration or an unscoped enumeration.</p>
-     <li data-md="">
+     <li data-md>
       <p>A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the nominated scoped enumeration or unscoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.  During unqualified name lookup ([basic.lookup.unqual]), the names appear as if they were declared in the scope where the <i>using-enum-directive</i> appears.</p>
-     <li data-md="">
+     <li data-md>
       <p>A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears. [ <i>Example:</i></p>
-<pre class="language-cpp highlight">    <span class="k">namespace</span> <span class="n">A</span> <span class="p">{</span>
-      <span class="k">enum</span> <span class="k">class</span> <span class="nc">e</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">};</span>
-      <span class="k">using</span> <span class="k">enum</span> <span class="n">a</span><span class="o">::</span><span class="n">e</span><span class="p">;</span> <span class="c1">// make e::i visible in A</span>
-<span class="c1"></span>      <span class="k">namespace</span> <span class="n">B</span> <span class="p">{</span>
-        <span class="k">enum</span> <span class="k">class</span> <span class="nc">f</span> <span class="p">{</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">};</span>
-        <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">B</span><span class="o">::</span><span class="n">f</span><span class="p">;</span>
-        <span class="kt">void</span> <span class="nf">f1</span><span class="p">()</span> <span class="p">{</span>
-          <span class="n">i</span><span class="p">;</span>        <span class="c1">// OK, A::B::f::i visible in B and hides A::e::i</span>
-<span class="c1"></span>        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">namespace</span> <span class="n">C</span> <span class="p">{</span>
-      <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">e</span><span class="p">;</span>
-      <span class="k">using</span> <span class="k">enum</span> <span class="n">A</span><span class="o">::</span><span class="n">B</span><span class="o">::</span><span class="n">f</span><span class="p">;</span>
-      <span class="kt">void</span> <span class="nf">f2</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">i</span><span class="p">;</span>        <span class="c1">// ambiguous, A::e::i or A::B::f::i?</span>
-<span class="c1"></span>      <span class="p">}</span>
-    <span class="p">}</span>
+<pre class="language-cpp highlight">    <c- k>namespace</c-> <c- n>A</c-> <c- p>{</c->
+      <c- k>enum</c-> <c- k>class</c-> <c- nc>e</c-> <c- p>{</c-> <c- n>i</c-> <c- o>=</c-> <c- mi>0</c-> <c- p>};</c->
+      <c- k>using</c-> <c- k>enum</c-> <c- n>a</c-><c- o>::</c-><c- n>e</c-><c- p>;</c-> <c- c1>// make e::i visible in A</c->
+      <c- k>namespace</c-> <c- n>B</c-> <c- p>{</c->
+        <c- k>enum</c-> <c- k>class</c-> <c- nc>f</c-> <c- p>{</c-> <c- n>i</c-> <c- o>=</c-> <c- mi>1</c-> <c- p>};</c->
+        <c- k>using</c-> <c- k>enum</c-> <c- n>A</c-><c- o>::</c-><c- n>B</c-><c- o>::</c-><c- n>f</c-><c- p>;</c->
+        <c- b>void</c-> <c- nf>f1</c-><c- p>()</c-> <c- p>{</c->
+          <c- n>i</c-><c- p>;</c->        <c- c1>// OK, A::B::f::i visible in B and hides A::e::i</c->
+        <c- p>}</c->
+      <c- p>}</c->
+    <c- p>}</c->
+    <c- k>namespace</c-> <c- n>C</c-> <c- p>{</c->
+      <c- k>using</c-> <c- k>enum</c-> <c- n>A</c-><c- o>::</c-><c- n>e</c-><c- p>;</c->
+      <c- k>using</c-> <c- k>enum</c-> <c- n>A</c-><c- o>::</c-><c- n>B</c-><c- o>::</c-><c- n>f</c-><c- p>;</c->
+      <c- b>void</c-> <c- nf>f2</c-><c- p>()</c-> <c- p>{</c->
+        <c- n>i</c-><c- p>;</c->        <c- c1>// ambiguous, A::e::i or A::B::f::i?</c->
+      <c- p>}</c->
+    <c- p>}</c->
 </pre>
       — end example ] 
     </ol>
    </div>
    <p>Under [basic.def], add (just after <i>using-directive</i>)  (and renumber section):</p>
    <div class="ins"> 2.17. — it is a <i>using-enum-directive</i> </div>
-   <h3 class="heading settled" data-level="6.3" id="wording-enumdecl"><span class="secno">6.3. </span><span class="content">Changes required to add <code class="highlight"><span class="k">using</span> <span class="n">ENUM_ID</span><span class="o">::</span><span class="n">IDENTIFIER</span><span class="p">;</span></code></span><a class="self-link" href="#wording-enumdecl"></a></h3>
+   <h3 class="heading settled" data-level="7.3" id="wording-enumdecl"><span class="secno">7.3. </span><span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-><c- p>;</c-></code></span><a class="self-link" href="#wording-enumdecl"></a></h3>
    <p>In chapter [namespace.udecl], remove:</p>
    <div class="del">
     <ol start="7">
-     <li data-md="">
+     <li data-md>
       <p>A <i>using-declaration</i> shall not name a scoped enumerator.</p>
     </ol>
    </div>
    <p>Then add:</p>
    <div class="ins">
     <ol start="7">
-     <li data-md="">
+     <li data-md>
       <p>A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>’s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>’s declarative region. — <i>end note</i>]</p>
     </ol>
    </div>
-   <h2 class="heading settled" data-level="7" id="ack"><span class="secno">7. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
-   <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to <code class="highlight"><span class="k">enum</span></code>s, and Dan Saks for the permission to include a quotation from him.</p>
+   <h2 class="heading settled" data-level="8" id="ack"><span class="secno">8. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
+   <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to <code class="highlight"><c- k>enum</c-></code>s, and Dan Saks for the permission to include a quotation from him.</p>
   </main>
 <script>
 (function() {
@@ -1772,5 +1856,5 @@ pre .property::before, pre .property::after {
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
    <dt id="biblio-p0945r0">[P0945R0]
-   <dd>Richard Smith. <a href="https://wg21.link/p0945r0">Generalizing alias declarations</a>. URL: <a href="https://wg21.link/p0945r0">https://wg21.link/p0945r0</a>
+   <dd>Richard Smith. <a href="https://wg21.link/p0945r0">Generalizing alias declarations</a>. 10 February 2018. URL: <a href="https://wg21.link/p0945r0">https://wg21.link/p0945r0</a>
   </dl>

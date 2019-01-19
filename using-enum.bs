@@ -7,9 +7,9 @@ Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
 Shortname: P1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
-Date: 2018-09-01
+Date: 2019-01-20
 Markup Shorthands: markdown yes
-Revision: 2
+Revision: 3
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
 </pre>
 
@@ -148,8 +148,65 @@ This would mirror the current syntax for introducing namespaced names into the c
 Note: this does not conflict with [[P0945R0]], because that paper only deals with the syntax `using name = id-expression`, which duplicates the enumerator name.
 
 
+Examples {#examples}
+====================
+
+Strongly typed enums with global identifiers {#strong-enums-global-ids}
+-----------------------------------------------------------------------
+
+This proposal lets you make strongly-typed enums still export their identifiers to namespace scope, therefore behaving like the old enums in that respect:
+
+```
+namespace my_lib {
+
+enum class errcode {
+  SUCCESS = 0,
+  ENOMEM = 1,
+  EAGAIN = 2,
+  ETOOSLOW = 3
+};
+using enum errcode;
+
+}
+
+namespace foo {
+
+my_lib::errcode get_widget() {
+  using namespace my_lib;
+  return ETOOSLOW; // works, and conversions to int don't.
+}
+
+}
+```
+
+Switching with no syntax overhead {#no-prefix-switches}
+-------------------------------------------------------
+
+The proposal allows for importing enums inside the switch body, which is a scope, and using them for labels:
+
+```cpp
+enum class rgba_color_channel { red, green, blue, alpha};
+
+std::string_view to_string(rgba_color_channel channel) {
+  switch (my_channel) {
+    using enum rgba_color_channel;
+    case red:   return "red";
+    case green: return "green";
+    case blue:  return "blue";
+    case alpha: return "alpha";
+  }
+}
+```
+
+
 Frequently Asked Questions {#faq}
 ==========================
+
+Has this been implemented? {#faq-impl}
+--------------------------------------
+
+Yes. The author has an implementation in clang. It has not been reviewed or released yet, however. There do not seem to be major issues with implementation.
+
 
 Can I do this with unscoped enums? {#faq-old-enum}
 -----------------------------------
