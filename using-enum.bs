@@ -1,7 +1,7 @@
 <pre class='metadata'>
 Title: Using Enum
 Status: P
-Audience: SG1, EWG
+Audience: EWG, CWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
 Shortname: P1099
@@ -32,6 +32,7 @@ Revision History {#history}
 ================
 - r1: Typos. Changed target from LEWG to EWG.
 - r2: Added FAQ and wording, and extended to regular enums.
+- r3: Added examples. Nothing of substance changed.
 
 Motivation {#motivation}
 ==========
