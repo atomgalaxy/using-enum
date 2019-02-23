@@ -1,15 +1,15 @@
 <pre class='metadata'>
 Title: Using Enum
-Status: P
-Audience: EWG, CWG
+Status: D
+Audience: CWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
-Shortname: P1099
+Shortname: D1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
 Date: 2019-01-20
 Markup Shorthands: markdown yes
-Revision: 3
+Revision: 4
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
 </pre>
 
@@ -33,7 +33,13 @@ Revision History {#history}
 - r1: Typos. Changed target from LEWG to EWG.
 - r2: Added FAQ and wording, and extended to regular enums.
 - r3: Added examples. Nothing of substance changed.
-- r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it.
+- r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll.
+
+Status of this paper {#status}
+====================
+
+This paper has been approved by EWG and sent to Core with the ship vehicle of C++20.
+
 
 Motivation {#motivation}
 ==========
@@ -61,7 +67,7 @@ std::string_view to_string(rgba_color_channel channel) {
 }
 ```
 
-The necessary repetition of the class enum name reduces legibility by introducing noise in contexts where the enum class is obvious.
+The necessary repetition of the `enum class` name reduces legibility by introducing noise in contexts where said name is obvious.
 
 To eliminate the noise penalty for introducing long (but descriptive) `enum class` names, this paper proposes that the statement
 
@@ -69,7 +75,7 @@ To eliminate the noise penalty for introducing long (but descriptive) `enum clas
 using enum rgba_color_channel;
 ```
 
-introduce the enum member identifiers into the local scope so that they may be referred to unqualified.
+introduce the enumerator identifiers into the local scope, so they may be referred to unqualified.
 
 Furthermore, the syntax
 
@@ -77,9 +83,9 @@ Furthermore, the syntax
 using rgba_color_channel::red;
 ```
 
-should bring the identifier `red` into the local scope, so that it may be used unqualified.
+should bring the identifier `red` into the local scope, so it may be used unqualified.
 
-The above example would then probably be written as
+The above example would then be written as
 
 ```cpp
 std::string_view to_string(rgba_color_channel channel) {
@@ -100,19 +106,20 @@ Rationale {#rationale}
 Consistency {#consistency}
 -----------
 
-`enum class`es, as well as plain old `enum`s, are not classes - they seem to be closer to namespaces consisting of `static constexpr` inline variables. The familiar `using` syntax that works for namespaces should therefore apply to them as well, in some fashion.
+`enum class`es and `enum`s are not classes - they are closer to namespaces comprising `static constexpr` inline variables. The familiar `using` syntax that works for namespaces should therefore apply to them as well, in some fashion. Because they are closed, small, and do not contain overload sets, we can do better than the *using-directive* does for namespaces, and actually get the identifiers into the local scope, which is what the user expects.
 
 
 Better Identifiers {#betterids}
 ------------------
 
-The introduction of this feature would allow better naming of enums. Currently, enums are named with as short an identifier as possible, often to the point of absurdity, when they are reduced to completely nondescriptive abbreviations that only hint at their proper meaning. (Just what does `zfqc::add_op` really mean?)
+The introduction of this feature would allow better naming of enumerations. Currently, enums are named with as short an identifier as possible, often to the point of absurdity, when they are reduced to completely nondescriptive abbreviations that only hint at their proper meaning. (Just what does `zfqc::add_op` really mean?)
 
-With this feature, identifiers become available to unqualified lookup in local contexts where their source is obvious, giving control of lookup style back to the user of the enum, instead of baking name semantics into the type of the enum.
+With this feature, identifiers become available to unqualified lookup in local contexts where their source is obvious, giving control of lookup style back to the user of the enum, instead of baking lookup semantics into the type of the enum.
 
 
 Evidence of Need {#need}
 ----------------
+
 At a casual search, we were able to locate this
 [thread on stackoverflow](https://stackoverflow.com/questions/9450338/equivalent-of-using-namespace-x-for-scoped-enumerations).
 
@@ -275,11 +282,10 @@ Proposed Wording {#wording}
 
 Preface {#wording-preface}
 ------------------
-The authors are new at this, and welcome suggestions for wording.
 
 The idea is that the identifiers appear as if they were declared in the declarative region where the using-enum-directive appears, and not model the using-directive's "enclosing namespace" wording.
 
-All wording is relative to the working draft of the ISO/IEC IS 14882: N4765.
+All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.
 
 
 Changes required to add `using ENUM_ID::IDENTIFIER;` {#wording-enumdecl}
@@ -302,7 +308,11 @@ Then add:
 Changes required to add `using enum IDENTIFIER;` {#wording-enumdirect}
 ----------------
 
-In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Directive", with the stable reference "[enum.udir]".
+In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".
+
+**Note to reviewer:** This section has been modelled on the *using-directive* section, but the semantics have been modified to inject names into the local scope as opposed to the closest common namespace. The part that constrains the name of the namespace in *using-directive* to be only looked up among namespace names was replaced with *shall name a scoped enumeration or an unscoped enumeration*.
+
+**Question for Core**: since namespaces are treated as somewhat *apart*, should this specify to *not* look at namespace names at all, or is the current wording OK? Enum names do not often clash with the name of their enclosing namespace, so the question is a corner-case, I just don't have the depth of knowledge of how we do this elsewhere to know the answer.
 
 Add:
 
@@ -330,7 +340,7 @@ Under [basic.def], add (just after <i>using-directive</i>)  (and renumber sectio
 Acknowledgements {#ack}
 ================
 
-The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG.
+The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go.
 
 <!--
  vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
