@@ -33,6 +33,7 @@ Revision History {#history}
 - r1: Typos. Changed target from LEWG to EWG.
 - r2: Added FAQ and wording, and extended to regular enums.
 - r3: Added examples. Nothing of substance changed.
+- r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it.
 
 Motivation {#motivation}
 ==========
@@ -121,18 +122,6 @@ Anecdotally, 100% of people the authors have shown this to (~30) at CppCon have 
 Proposal {#proposal}
 ========
 
-Syntax: `using enum IDENTIFIER` {#using-enum-id}
------------------------
-
-We propose the addition of a new `using enum` statement:
-
-```cpp
-using enum IDENTIFIER;
-```
-
-The above statement introduces the members of the enumeration `IDENTIFIER` into the local namespace, thus enabling lookup without qualification. As usual, a name lookup ambiguity makes the program ill-formed (diagnostic required).
-
-
 Syntax: `using ENUM_ID::IDENTIFIER` {#using-id}
 ---------------------------
 
@@ -147,6 +136,20 @@ to introduce the `IDENTIFIER` into the local namespace, aliasing `ENUM_ID::IDENT
 This would mirror the current syntax for introducing namespaced names into the current scope.
 
 Note: this does not conflict with [[P0945R0]], because that paper only deals with the syntax `using name = id-expression`, which duplicates the enumerator name.
+
+
+Syntax: `using enum IDENTIFIER` {#using-enum-id}
+-----------------------
+
+We propose the addition of a new `using enum` statement:
+
+```cpp
+using enum IDENTIFIER;
+```
+
+This makes all the enumerators of the enum available for lookup in the local scope. It's almost as if it expanded to a series of `using ENUM::ENUMERATOR` statements for every enumerator in the enum, but doesn't actually introduce any declarations into the local scope.
+
+(Note: this was changed from "works as a using-directive" to the current way with a strong direction poll from EWG.)
 
 
 Examples {#examples}
@@ -206,7 +209,7 @@ Frequently Asked Questions {#faq}
 Has this been implemented? {#faq-impl}
 --------------------------------------
 
-Yes. The author has an implementation in clang. It has not been reviewed or released yet, however. There do not seem to be major issues with implementation.
+Yes. The author has an implementation in clang. It has not been reviewed or released yet, however. There do not seem to be major issues with implementation. In particular, the `using ENUM::IDENTIFIER` syntax literally entailed removing a condition from an if-statement, and that was it.
 
 
 Can I do this with unscoped enums? {#faq-old-enum}
@@ -274,9 +277,26 @@ Preface {#wording-preface}
 ------------------
 The authors are new at this, and welcome suggestions for wording.
 
-The intention is to effectively mirror the wording for namespaces from [namespace.udir], and pare it down to only things that apply to enumerators.
+The idea is that the identifiers appear as if they were declared in the declarative region where the using-enum-directive appears, and not model the using-directive's "enclosing namespace" wording.
 
 All wording is relative to the working draft of the ISO/IEC IS 14882: N4765.
+
+
+Changes required to add `using ENUM_ID::IDENTIFIER;` {#wording-enumdecl}
+-------------------------
+
+In chapter [namespace.udecl], remove:
+
+<div class='del'>
+7. A <i>using-declaration</i> shall not name a scoped enumerator.
+
+</div>
+
+Then add:
+<div class='ins'>
+7. A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>'s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>'s declarative region. &mdash; <i>end note</i>]
+
+</div>
 
 
 Changes required to add `using enum IDENTIFIER;` {#wording-enumdirect}
@@ -296,29 +316,7 @@ Add:
 
 2. A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the nominated scoped enumeration or unscoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.  During unqualified name lookup ([basic.lookup.unqual]), the names appear as if they were declared in the scope where the <i>using-enum-directive</i> appears.
 
-3. A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears. [ <i>Example:</i>
-    ```cpp
-    namespace A {
-      enum class e { i = 0 };
-      using enum a::e; // make e::i visible in A
-      namespace B {
-        enum class f { i = 1 };
-        using enum A::B::f;
-        void f1() {
-          i;        // OK, A::B::f::i visible in B and hides A::e::i
-        }
-      }
-    }
-    namespace C {
-      using enum A::e;
-      using enum A::B::f;
-      void f2() {
-        i;        // ambiguous, A::e::i or A::B::f::i?
-      }
-    }
-
-    ```
-    &mdash; end example ]
+3. A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears.
 
 </div>
 
@@ -328,27 +326,11 @@ Under [basic.def], add (just after <i>using-directive</i>)  (and renumber sectio
 
 </div>
 
-Changes required to add `using ENUM_ID::IDENTIFIER;` {#wording-enumdecl}
--------------------------
-
-In chapter [namespace.udecl], remove:
-
-<div class='del'>
-7. A <i>using-declaration</i> shall not name a scoped enumerator.
-
-</div>
-
-Then add:
-<div class='ins'>
-7. A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>'s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>'s declarative region. &mdash; <i>end note</i>]
-
-</div>
-
 
 Acknowledgements {#ack}
 ================
 
-The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him.
+The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG.
 
 <!--
  vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
