@@ -312,21 +312,17 @@ In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", 
 
 **Notes to reviewers:**
 - This section has been modelled on the *using-directive* section, but the semantics have been modified to inject names into the local scope as opposed to the closest common namespace.
-- I might have missed a few places in [lookup.\*] that refer to *using-directive*s that need to be fixed to include also *using-enum-directive*s.
-- The intention for looking up the enumeration whose members we are exposing is intended to be the normal way we'd look up a type-name (which in this case must be an enum-name). The point is to be thoroughly unsurprising. I tried my best wording that, but if I didn't get it write, the correct incantation should be considered an editorial change. The wording I picked follows the wording in [
 
 Add:
 
 <div class='ins'>
 <i>using-enum-directive:</i><br>
 <i>&nbsp;&nbsp;&nbsp;&nbsp;attribute-specifier-seq<sub>opt</sub></i>
-<tt>using enum</tt> <i>nested-name-specifier<sub>opt</sub></i>
-<i>enum-name</i>
+<tt>using </tt> <i>elaborated-type-specifier</i>
 
-1. A <i>using-enum-directive</i> shall not appear in class scope, but may appear in namespace scope or in block scope. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>. The <i>enum-name</i> in a <i>using-enum-directive</i> shall name a scoped enumeration or an unscoped enumeration. During the lookup of the *enum-name*, non-type names are ignored ([basic.scope.hiding]).
-
-2. A <i>using-enum-directive</i> specifies that the <i>enumerator</i>s in the nominated scoped enumeration or unscoped enumeration can be used in the scope in which the <i>using-enum-directive</i> appears after the <i>using-enum-directive</i>.  During unqualified name lookup ([basic.lookup.unqual]), the names appear as if they were declared in the scope where the <i>using-enum-directive</i> appears.
-
+1. The <i>elaborated-type-specifier</i> shall name an enumeration. [Note: an elaborated type specifier for an enumeration always begins with `enum` -- end note]
+2. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.
+3. A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]
 3. A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears.
 
 </div>
@@ -337,26 +333,13 @@ Under [basic.def], add (just after <i>using-directive</i>)  (and renumber sectio
 
 </div>
 
-In [basic.scope.hiding] paragraph 2, add:
-
-<div class='std'>
-If a class name ([class.name]) or enumeration name ([dcl.enum]) and a variable, data member, function, or enumerator are declared in the same declarative region (in any order) with the same name (excluding declarations made visible via using-directives <span class='ins'>or using-enum-directives</span> ([basic.lookup.unqual]), the class or enumeration name is hidden wherever the variable, data member, function, or enumerator name is visible.
-
-</div>
-
-
-In [basic.scope.hiding] paragraph 4, add:
-
-<div class='std'>
-During the lookup of a name qualified by a namespace name, declarations that would otherwise be made visible by a using-directive <span class='ins'>or *using-enum-directive*</span> can be hidden by declarations with the same name in the namespace containing the using-directive <span class='ins'>or *using-enum-directive*</span>; see [namespace.qual].
-
-</div>
-
 
 Acknowledgements {#ack}
 ================
 
 The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go.
+
+Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording.
 
 <!--
  vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
