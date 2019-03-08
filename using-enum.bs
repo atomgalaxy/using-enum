@@ -287,43 +287,44 @@ The idea is that the identifiers appear as if they were declared in the declarat
 
 All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.
 
-
-Changes required to add `using ENUM_ID::IDENTIFIER;` {#wording-enumdecl}
+Chages {#wording-changes}
 -------------------------
 
-In chapter [namespace.udecl], remove:
 
-<div class='del'>
-7. A <i>using-declaration</i> shall not name a scoped enumerator.
+In chapter [namespace.udecl]:
 
-</div>
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i>’s <i>nested-name-specifier</i> shall name a base class of the class being defined<ins>. unless it names an enumerator</ins>. [Note: this exception allows the introduction of enumerators into class scope. --end note]
 
-Then add:
-<div class='ins'>
-7. A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>'s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>'s declarative region. &mdash; <i>end note</i>]
+<del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
 
-</div>
+8. A <i>using-declaration</i> that names a class member <ins>that is not an enumerator</ins> shall be a <i>member-declaration</i>. [Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]
 
-
-Changes required to add `using enum IDENTIFIER;` {#wording-enumdirect}
-----------------
 
 In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".
-
-**Notes to reviewers:**
-- This section has been modelled on the *using-directive* section, but the semantics have been modified to inject names into the local scope as opposed to the closest common namespace.
-
-Add:
 
 <div class='ins'>
 <i>using-enum-directive:</i><br>
 <i>&nbsp;&nbsp;&nbsp;&nbsp;attribute-specifier-seq<sub>opt</sub></i>
-<tt>using </tt> <i>elaborated-type-specifier</i>
+<tt>using </tt> <i>elaborated-type-specifier</i>;
 
 1. The <i>elaborated-type-specifier</i> shall name an enumeration. [Note: an elaborated type specifier for an enumeration always begins with `enum` -- end note]
+2. The <i>elaborated-type-specifier</i> may not name a dependent type.
 2. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.
-3. A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]
-3. A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears.
+3. A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]
+
+[Note: an <i>using-enum-directive</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:
+```
+enum class E { e1, e2 };
+struct S {
+  using enum E; // introduces e1 and e2 into S
+};
+void f() {
+  S s;
+  s.e1; // well-formed, names E::e1.
+  S::e2; // well-formed, names E::e2.
+}
+```
+-- end note]
 
 </div>
 
@@ -333,13 +334,35 @@ Under [basic.def], add (just after <i>using-directive</i>)  (and renumber sectio
 
 </div>
 
+In [gram.dcl], under <i>block-declaration</i>:
+
+<i>block-declaration</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[...]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>using-directive</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>using-enum-directive</i></ins><br/>
+
+In [class.mem], under <i>member-declaration</i>:
+
+<i>member-declaration</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[...]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>using-declaration</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>using-enum-directive</i></ins><br/>
+
+
+Note to editor:
+
+For greater consistency, rename, everywhere:
+- "using directive" to "using namespace directive"
+- and "<i>using-directive</i>" to "<i>using-namespace-directive</i>"
+- [namespace.udir]'s title should be Using Namespace Directive.
+
 
 Acknowledgements {#ack}
 ================
 
 The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go.
 
-Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording.
+Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording, and found the need to make enum names non-dependent.
 
 <!--
  vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0

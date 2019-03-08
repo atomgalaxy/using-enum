@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="94584420864784f8ba6fb41258f919f877a5d621" name="document-revision">
+  <meta content="2dd89341b0322f077a368cc2fa8f34fe30f5065a" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1515,8 +1515,7 @@ pre .property::before, pre .property::after {
      <a href="#wording"><span class="secno">8</span> <span class="content">Proposed Wording</span></a>
      <ol class="toc">
       <li><a href="#wording-preface"><span class="secno">8.1</span> <span class="content">Preface</span></a>
-      <li><a href="#wording-enumdecl"><span class="secno">8.2</span> <span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-><c- p>;</c-></code></span></a>
-      <li><a href="#wording-enumdirect"><span class="secno">8.3</span> <span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-><c- p>;</c-></code></span></a>
+      <li><a href="#wording-changes"><span class="secno">8.2</span> <span class="content">Chages</span></a>
      </ol>
     <li><a href="#ack"><span class="secno">9</span> <span class="content">Acknowledgements</span></a>
     <li>
@@ -1674,49 +1673,80 @@ pre .property::before, pre .property::after {
    <h3 class="heading settled" data-level="8.1" id="wording-preface"><span class="secno">8.1. </span><span class="content">Preface</span><a class="self-link" href="#wording-preface"></a></h3>
    <p>The idea is that the identifiers appear as if they were declared in the declarative region where the using-enum-directive appears, and not model the using-directive’s "enclosing namespace" wording.</p>
    <p>All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.</p>
-   <h3 class="heading settled" data-level="8.2" id="wording-enumdecl"><span class="secno">8.2. </span><span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- n>ENUM_ID</c-><c- o>::</c-><c- n>IDENTIFIER</c-><c- p>;</c-></code></span><a class="self-link" href="#wording-enumdecl"></a></h3>
-   <p>In chapter [namespace.udecl], remove:</p>
-   <div class="del">
-    <ol start="7">
-     <li data-md>
-      <p>A <i>using-declaration</i> shall not name a scoped enumerator.</p>
-    </ol>
-   </div>
-   <p>Then add:</p>
-   <div class="ins">
-    <ol start="7">
-     <li data-md>
-      <p>A <i>using-declaration</i> that names a scoped or unscoped enumerator shall become a synonim for that enumerator in the <i>using-declaration</i>’s declarative region. [ <i>Note:</i> this is equivalent to declaring that enumerator in the <i>using-declaration</i>’s declarative region. — <i>end note</i>]</p>
-    </ol>
-   </div>
-   <h3 class="heading settled" data-level="8.3" id="wording-enumdirect"><span class="secno">8.3. </span><span class="content">Changes required to add <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>IDENTIFIER</c-><c- p>;</c-></code></span><a class="self-link" href="#wording-enumdirect"></a></h3>
-   <p>In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".</p>
-   <p><strong>Notes to reviewers:</strong></p>
-   <ul>
+   <h3 class="heading settled" data-level="8.2" id="wording-changes"><span class="secno">8.2. </span><span class="content">Chages</span><a class="self-link" href="#wording-changes"></a></h3>
+   <p>In chapter [namespace.udecl]:</p>
+   <ol start="3">
     <li data-md>
-     <p>This section has been modelled on the <em>using-directive</em> section, but the semantics have been modified to inject names into the local scope as opposed to the closest common namespace.</p>
-   </ul>
-   <p>Add:</p>
+     <p>
+      In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i>’s <i>nested-name-specifier</i> shall name a base class of the class being defined
+      <ins>. unless it names an enumerator</ins>
+      . [Note: this exception allows the introduction of enumerators into class scope. --end note]
+     </p>
+   </ol>
+   <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
+   <ol start="8">
+    <li data-md>
+     <p>
+      A <i>using-declaration</i> that names a class member 
+      <ins>that is not an enumerator</ins>
+       shall be a <i>member-declaration</i>. [Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]
+     </p>
+   </ol>
+   <p>In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".</p>
    <div class="ins">
      <i>using-enum-directive:</i><br> <i>    attribute-specifier-seq<sub>opt</sub></i> 
     <tt>using </tt>
-     <i>elaborated-type-specifier</i> 
+     <i>elaborated-type-specifier</i>; 
     <ol>
      <li data-md>
       <p>The <i>elaborated-type-specifier</i> shall name an enumeration. [Note: an elaborated type specifier for an enumeration always begins with <code class="highlight"><c- k>enum</c-></code> -- end note]</p>
      <li data-md>
+      <p>The <i>elaborated-type-specifier</i> may not name a dependent type.</p>
+     <li data-md>
       <p>The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.</p>
      <li data-md>
-      <p>A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]</p>
-     <li data-md>
-      <p>A <i>using-enum-directive</i> does not add any members to the declarative region in which it appears.</p>
+      <p>A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]</p>
     </ol>
+    <p>[Note: an <i>using-enum-directive</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:</p>
+<pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>E</c-> <c- p>{</c-> <c- n>e1</c-><c- p>,</c-> <c- n>e2</c-> <c- p>};</c->
+<c- k>struct</c-> <c- n>S</c-> <c- p>{</c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>E</c-><c- p>;</c-> <c- c1>// introduces e1 and e2 into S</c->
+<c- p>};</c->
+<c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
+  <c- n>S</c-> <c- n>s</c-><c- p>;</c->
+  <c- n>s</c-><c- p>.</c-><c- n>e1</c-><c- p>;</c-> <c- c1>// well-formed, names E::e1.</c->
+  <c- n>S</c-><c- o>::</c-><c- n>e2</c-><c- p>;</c-> <c- c1>// well-formed, names E::e2.</c->
+<c- p>}</c->
+</pre>
+    -- end note] 
    </div>
    <p>Under [basic.def], add (just after <i>using-directive</i>)  (and renumber section):</p>
    <div class="ins"> 2.17. — it is a <i>using-enum-directive</i> </div>
+   <p>In [gram.dcl], under <i>block-declaration</i>:</p>
+   <p>
+    <i>block-declaration</i><br>     [...]<br>     <i>using-directive</i><br>     
+    <ins><i>using-enum-directive</i></ins>
+    <br>
+   </p>
+   <p>In [class.mem], under <i>member-declaration</i>:</p>
+   <p>
+    <i>member-declaration</i><br>     [...]<br>     <i>using-declaration</i><br>     
+    <ins><i>using-enum-directive</i></ins>
+    <br>
+   </p>
+   <p>Note to editor:</p>
+   <p>For greater consistency, rename, everywhere:</p>
+   <ul>
+    <li data-md>
+     <p>"using directive" to "using namespace directive"</p>
+    <li data-md>
+     <p>and "<i>using-directive</i>" to "<i>using-namespace-directive</i>"</p>
+    <li data-md>
+     <p>[namespace.udir]'s title should be Using Namespace Directive.</p>
+   </ul>
    <h2 class="heading settled" data-level="9" id="ack"><span class="secno">9. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
    <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to <code class="highlight"><c- k>enum</c-></code>s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go.</p>
-   <p>Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording.</p>
+   <p>Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording, and found the need to make enum names non-dependent.</p>
   </main>
 <script>
 (function() {
