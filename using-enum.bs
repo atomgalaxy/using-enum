@@ -287,13 +287,13 @@ The idea is that the identifiers appear as if they were declared in the declarat
 
 All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.
 
-Chages {#wording-changes}
+Changes {#wording-changes}
 -------------------------
 
 
 In chapter [namespace.udecl]:
 
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i>’s <i>nested-name-specifier</i> shall name a base class of the class being defined<ins>. unless it names an enumerator</ins>. [Note: this exception allows the introduction of enumerators into class scope. --end note]
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> nested-name-specifier <del>shall name</del> <ins>naming</ins> a base class of the class being defined. [Note: this exception allows the introduction of enumerators into class scope. --end note]
 
 <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
 
@@ -308,7 +308,7 @@ In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", 
 <tt>using </tt> <i>elaborated-type-specifier</i>;
 
 1. The <i>elaborated-type-specifier</i> shall name an enumeration. [Note: an elaborated type specifier for an enumeration always begins with `enum` -- end note]
-2. The <i>elaborated-type-specifier</i> may not name a dependent type.
+2. The <i>elaborated-type-specifier</i> shall not name a dependent type.
 2. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.
 3. A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]
 

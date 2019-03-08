@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="30f8a4da4c8498c6f47aca97fe17744f5259f080" name="document-revision">
+  <meta content="493c3a254e8263c7565913fb1d5fda1960e67a0d" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1515,7 +1515,7 @@ pre .property::before, pre .property::after {
      <a href="#wording"><span class="secno">8</span> <span class="content">Proposed Wording</span></a>
      <ol class="toc">
       <li><a href="#wording-preface"><span class="secno">8.1</span> <span class="content">Preface</span></a>
-      <li><a href="#wording-changes"><span class="secno">8.2</span> <span class="content">Chages</span></a>
+      <li><a href="#wording-changes"><span class="secno">8.2</span> <span class="content">Changes</span></a>
      </ol>
     <li><a href="#ack"><span class="secno">9</span> <span class="content">Acknowledgements</span></a>
     <li>
@@ -1673,14 +1673,18 @@ pre .property::before, pre .property::after {
    <h3 class="heading settled" data-level="8.1" id="wording-preface"><span class="secno">8.1. </span><span class="content">Preface</span><a class="self-link" href="#wording-preface"></a></h3>
    <p>The idea is that the identifiers appear as if they were declared in the declarative region where the using-enum-directive appears, and not model the using-directive’s "enclosing namespace" wording.</p>
    <p>All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.</p>
-   <h3 class="heading settled" data-level="8.2" id="wording-changes"><span class="secno">8.2. </span><span class="content">Chages</span><a class="self-link" href="#wording-changes"></a></h3>
+   <h3 class="heading settled" data-level="8.2" id="wording-changes"><span class="secno">8.2. </span><span class="content">Changes</span><a class="self-link" href="#wording-changes"></a></h3>
    <p>In chapter [namespace.udecl]:</p>
    <ol start="3">
     <li data-md>
      <p>
-      In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i>’s <i>nested-name-specifier</i> shall name a base class of the class being defined
-      <ins>. unless it names an enumerator</ins>
-      . [Note: this exception allows the introduction of enumerators into class scope. --end note]
+      In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i>
+      <del>'s</del>
+      <ins>shall either name an enumerator or have a</ins>
+       nested-name-specifier 
+      <del>shall name</del>
+      <ins>naming</ins>
+       a base class of the class being defined. [Note: this exception allows the introduction of enumerators into class scope. --end note]
      </p>
    </ol>
    <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
@@ -1701,7 +1705,7 @@ pre .property::before, pre .property::after {
      <li data-md>
       <p>The <i>elaborated-type-specifier</i> shall name an enumeration. [Note: an elaborated type specifier for an enumeration always begins with <code class="highlight"><c- k>enum</c-></code> -- end note]</p>
      <li data-md>
-      <p>The <i>elaborated-type-specifier</i> may not name a dependent type.</p>
+      <p>The <i>elaborated-type-specifier</i> shall not name a dependent type.</p>
      <li data-md>
       <p>The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.</p>
      <li data-md>
