@@ -1,13 +1,13 @@
 <pre class='metadata'>
 Title: Using Enum
-Status: D
+Status: P
 Audience: CWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
 Shortname: D1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
-Date: 2019-01-20
+Date: 2019-03-11
 Markup Shorthands: markdown yes
 Revision: 4
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
