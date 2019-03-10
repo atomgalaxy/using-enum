@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>D1099R4: Using Enum</title>
+  <title>P1099R4: Using Enum</title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="493c3a254e8263c7565913fb1d5fda1960e67a0d" name="document-revision">
+  <meta content="70475b58d39c299b392ffd609a07c5f0291dfcf0" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1453,8 +1453,8 @@ pre .property::before, pre .property::after {
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">D1099R4<br>Using Enum</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2019-03-11">2019-03-11</time></span></h2>
+   <h1 class="p-name no-ref" id="title">P1099R4<br>Using Enum</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2019-03-10">2019-03-10</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1463,7 +1463,7 @@ pre .property::before, pre .property::after {
      <dd>
       <dd class="editor p-author h-card vcard"><span class="p-name fn">Gašper Ažman &lt;gasper.azman@gmail.com></span>
      <dd>
-      <dd class="editor p-author h-card vcard"><span class="p-name fn">Jonathan Müller &lt;jonathan.mueller@foonathan.net></span>
+      <dd class="editor p-author h-card vcard"><span class="p-name fn">Jonathan Müller &lt;jonathan.mueller@nathan.net></span>
      <dt>Audience:
      <dd>CWG
      <dt>Project:
@@ -1501,6 +1501,7 @@ pre .property::before, pre .property::after {
      <ol class="toc">
       <li><a href="#strong-enums-global-ids"><span class="secno">6.1</span> <span class="content">Strongly typed enums with global identifiers</span></a>
       <li><a href="#no-prefix-switches"><span class="secno">6.2</span> <span class="content">Switching with no syntax overhead</span></a>
+      <li><a href="#adding-adl-only-functions-to-enumerations"><span class="secno">6.3</span> <span class="content">Adding ADL-only Functions to Enumerations:</span></a>
      </ol>
     <li>
      <a href="#faq"><span class="secno">7</span> <span class="content">Frequently Asked Questions</span></a>
@@ -1535,10 +1536,10 @@ pre .property::before, pre .property::after {
     <li data-md>
      <p>r3: Added examples. Nothing of substance changed.</p>
     <li data-md>
-     <p>r4: Clarified that <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>enum_name</c-></code> is supposed to have semantics as if the names were declared in the local scope as opposed to the way <em>using-directive</em> does it, as per EWG poll.</p>
+     <p>r4: Clarified that <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>enum_name</c-></code> is supposed to have semantics as if the names were declared in the local scope as opposed to the way <em>using-directive</em> does it, as per EWG poll. Added Eric Niebler’s example for using this feature to enable ADL-only functions on exposed enumerators (to support <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>begin</c-></code> being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith’s request.</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="status"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#status"></a></h2>
-   <p>This paper has been approved by EWG and sent to Core with the ship vehicle of C++20.</p>
+   <p>This paper has been approved by EWG in Kona 2019 and sent to Core with the ship vehicle of C++20.</p>
    <h2 class="heading settled" data-level="3" id="motivation"><span class="secno">3. </span><span class="content">Motivation</span><a class="self-link" href="#motivation"></a></h2>
    <blockquote>
     <p>The single biggest deterrent to use of scoped enumerations is the inability to associate them with a <em>using directive</em>.</p>
@@ -1615,7 +1616,7 @@ pre .property::before, pre .property::after {
 
 <c- p>}</c->
 
-<c- k>namespace</c-> <c- n>foo</c-> <c- p>{</c->
+<c- k>namespace</c->  <c- p>{</c->
 
 <c- n>my_lib</c-><c- o>::</c-><c- n>errcode</c-> <c- n>get_widget</c-><c- p>()</c-> <c- p>{</c->
   <c- k>using</c-> <c- k>namespace</c-> <c- n>my_lib</c-><c- p>;</c->
@@ -1638,6 +1639,26 @@ pre .property::before, pre .property::after {
   <c- p>}</c->
 <c- p>}</c->
 </pre>
+   <h3 class="heading settled" data-level="6.3" id="adding-adl-only-functions-to-enumerations"><span class="secno">6.3. </span><span class="content">Adding ADL-only Functions to Enumerations:</span><a class="self-link" href="#adding-adl-only-functions-to-enumerations"></a></h3>
+   <p>The proposal allows for adding ADL-only functions to enumerations without enumerators (supported now) and enumerators (currently not supported):</p>
+<pre class="language-cpp highlight"><c- k>namespace</c-> <c- n>ns</c-> <c- p>{</c->
+  <c- k>struct</c-> <c- n>E_detail</c-> <c- p>{</c->
+    <c- k>enum</c-> <c- n>E</c-> <c- p>{</c->
+      <c- n>e1</c-> 
+    <c- p>};</c->
+    <c- k>friend</c-> <c- b>void</c-> <c- nf>swap</c-><c- p>(</c-><c- n>E</c-><c- o>&amp;</c-><c- p>,</c-> <c- n>E</c-><c- o>&amp;</c-><c- p>);</c->  <c- c1>// adl-only swap in the only associated scope of the enum</c->
+  <c- p>};</c->
+  <c- k>using</c-> <c- n>E</c-> <c- o>=</c-> <c- n>E_detail</c-><c- o>::</c-><c- n>E</c-><c- p>;</c->  <c- c1>// import E into ns</c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>E</c-><c- p>;</c->           <c- c1>// expose the enumerators of E in ns. Also note the direct reference to E.</c->
+<c- p>}</c->
+
+<c- b>int</c-> <c- n>main</c-><c- p>()</c-> <c- p>{</c->
+  <c- k>auto</c-> <c- n>x</c-> <c- o>=</c-> <c- n>ns</c-><c- o>::</c-><c- n>e1</c-><c- p>;</c->
+  <c- k>auto</c-> <c- n>y</c-> <c- o>=</c-> <c- n>ns</c-><c- o>::</c-><c- n>e2</c-><c- p>;</c->
+  <c- n>swap</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>);</c-> <c- c1>// finds the swap in the associated struct</c->
+<c- p>}</c->
+</pre>
+   <p>This example was slightly modified from Eric Niebler’s on the <i>lib</i> mailing list when trying to find a way to make <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>begin</c-></code> and <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>end</c-></code> CPOs in a backwards-compatible fashion.</p>
    <h2 class="heading settled" data-level="7" id="faq"><span class="secno">7. </span><span class="content">Frequently Asked Questions</span><a class="self-link" href="#faq"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="faq-impl"><span class="secno">7.1. </span><span class="content">Has this been implemented?</span><a class="self-link" href="#faq-impl"></a></h3>
    <p>Yes. The author has an implementation in clang. It has not been reviewed or released yet, however. There do not seem to be major issues with implementation. In particular, the <code class="highlight"><c- k>using</c-> <c- n>ENUM</c-><c- o>::</c-><c- n>IDENTIFIER</c-></code> syntax literally entailed removing a condition from an if-statement, and that was it.</p>
@@ -1652,7 +1673,7 @@ pre .property::before, pre .property::after {
 <c- p>};</c->
 </pre>
    <p>which was superceeded by scoped enums. With the feature this paper proposes one can bring <code class="highlight"><c- n>A</c-></code>, <code class="highlight"><c- n>B</c-></code> and <code class="highlight"><c- n>C</c-></code> into the local scope by invoking:</p>
-<pre class="language-cpp highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>foo</c-><c- o>::</c-><c- n>bar</c-><c- p>;</c->
+<pre class="language-cpp highlight"><c- k>using</c-> <c- k>enum</c-> <c- o>::</c-><c- n>foo</c-><c- o>::</c-><c- n>bar</c-><c- p>;</c->
 </pre>
    <h3 class="heading settled" data-level="7.3" id="faq-ns-alias"><span class="secno">7.3. </span><span class="content">Are you proposing mirroring the namespace alias syntax as well?</span><a class="self-link" href="#faq-ns-alias"></a></h3>
    <p>No. We already have a way to do that, and it looks like this:</p>
@@ -1681,10 +1702,11 @@ pre .property::before, pre .property::after {
       In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i>
       <del>'s</del>
       <ins>shall either name an enumerator or have a</ins>
-       nested-name-specifier 
+       <i>nested-name-specifier</i> 
       <del>shall name</del>
       <ins>naming</ins>
-       a base class of the class being defined. [Note: this exception allows the introduction of enumerators into class scope. --end note]
+       a base class of the class being defined. 
+      <ins>[Note: this exception allows the introduction of enumerators into class scope. --end note]</ins>
      </p>
    </ol>
    <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
@@ -1693,7 +1715,8 @@ pre .property::before, pre .property::after {
      <p>
       A <i>using-declaration</i> that names a class member 
       <ins>that is not an enumerator</ins>
-       shall be a <i>member-declaration</i>. [Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]
+       shall be a <i>member-declaration</i>. 
+      <ins>[Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]</ins>
      </p>
    </ol>
    <p>In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".</p>
@@ -1749,7 +1772,7 @@ pre .property::before, pre .property::after {
      <p>[namespace.udir]'s title should be Using Namespace Directive.</p>
    </ul>
    <h2 class="heading settled" data-level="9" id="ack"><span class="secno">9. </span><span class="content">Acknowledgements</span><a class="self-link" href="#ack"></a></h2>
-   <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to <code class="highlight"><c- k>enum</c-></code>s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go.</p>
+   <p>The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to <code class="highlight"><c- k>enum</c-></code>s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go. Casey Carter pointed out some issues with wording typography, and realized that this paper allows adding adl-only functions to enumerators.</p>
    <p>Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording, and found the need to make enum names non-dependent.</p>
   </main>
 <script>

@@ -3,11 +3,11 @@ Title: Using Enum
 Status: P
 Audience: CWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
-Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
-Shortname: D1099
+Editor: Jonathan Müller <jonathan.mueller@nathan.net>
+Shortname: P1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
-Date: 2019-03-11
+Date: 2019-03-10
 Markup Shorthands: markdown yes
 Revision: 4
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
@@ -33,12 +33,12 @@ Revision History {#history}
 - r1: Typos. Changed target from LEWG to EWG.
 - r2: Added FAQ and wording, and extended to regular enums.
 - r3: Added examples. Nothing of substance changed.
-- r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll.
+- r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll. Added Eric Niebler's example for using this feature to enable ADL-only functions on exposed enumerators (to support `std::begin` being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith's request.
 
 Status of this paper {#status}
 ====================
 
-This paper has been approved by EWG and sent to Core with the ship vehicle of C++20.
+This paper has been approved by EWG in Kona 2019 and sent to Core with the ship vehicle of C++20.
 
 
 Motivation {#motivation}
@@ -180,7 +180,7 @@ using enum errcode;
 
 }
 
-namespace foo {
+namespace  {
 
 my_lib::errcode get_widget() {
   using namespace my_lib;
@@ -210,6 +210,33 @@ std::string_view to_string(rgba_color_channel channel) {
 ```
 
 
+Adding ADL-only Functions to Enumerations:
+------------------------------------------
+
+The proposal allows for adding ADL-only functions to enumerations without enumerators (supported now) and enumerators (currently not supported):
+
+```cpp
+namespace ns {
+  struct E_detail {
+    enum E {
+      e1 
+    };
+    friend void swap(E&, E&);  // adl-only swap in the only associated scope of the enum
+  };
+  using E = E_detail::E;  // import E into ns
+  using enum E;           // expose the enumerators of E in ns. Also note the direct reference to E.
+}
+
+int main() {
+  auto x = ns::e1;
+  auto y = ns::e2;
+  swap(x, y); // finds the swap in the associated struct
+}
+```
+
+This example was slightly modified from Eric Niebler's on the <i>lib</i> mailing list when trying to find a way to make `std::begin` and `std::end` CPOs in a backwards-compatible fashion.
+
+
 Frequently Asked Questions {#faq}
 ==========================
 
@@ -237,7 +264,7 @@ class foo {
 which was superceeded by scoped enums. With the feature this paper proposes one can bring `A`, `B` and `C` into the local scope by invoking:
 
 ```cpp
-using enum foo::bar;
+using enum ::foo::bar;
 ```
 
 
@@ -293,11 +320,11 @@ Changes {#wording-changes}
 
 In chapter [namespace.udecl]:
 
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> nested-name-specifier <del>shall name</del> <ins>naming</ins> a base class of the class being defined. [Note: this exception allows the introduction of enumerators into class scope. --end note]
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Note: this exception allows the introduction of enumerators into class scope. --end note]</ins>
 
 <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
 
-8. A <i>using-declaration</i> that names a class member <ins>that is not an enumerator</ins> shall be a <i>member-declaration</i>. [Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]
+8. A <i>using-declaration</i> that names a class member <ins>that is not an enumerator</ins> shall be a <i>member-declaration</i>. <ins>[Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]</ins>
 
 
 In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".
@@ -360,7 +387,7 @@ For greater consistency, rename, everywhere:
 Acknowledgements {#ack}
 ================
 
-The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go.
+The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go. Casey Carter pointed out some issues with wording typography, and realized that this paper allows adding adl-only functions to enumerators.
 
 Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording, and found the need to make enum names non-dependent.
 
