@@ -1,15 +1,15 @@
 <pre class='metadata'>
 Title: Using Enum
-Status: P
+Status: D
 Audience: CWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
-Editor: Jonathan Müller <jonathan.mueller@nathan.net>
+Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
 Shortname: P1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
-Date: 2019-03-10
+Date: 2019-06-28
 Markup Shorthands: markdown yes
-Revision: 4
+Revision: 5
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
 </pre>
 
@@ -34,6 +34,7 @@ Revision History {#history}
 - r2: Added FAQ and wording, and extended to regular enums.
 - r3: Added examples. Nothing of substance changed.
 - r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll. Added Eric Niebler's example for using this feature to enable ADL-only functions on exposed enumerators (to support `std::begin` being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith's request.
+- r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from *using-enum-declaration* to *using-enum-declaration*.
 
 Status of this paper {#status}
 ====================
@@ -176,11 +177,11 @@ enum class errcode {
   EAGAIN = 2,
   ETOOSLOW = 3
 };
-using enum errcode;
+using enum errcode; // import enumerators into namespace
 
 }
 
-namespace  {
+namespace NS {
 
 my_lib::errcode get_widget() {
   using namespace my_lib;
@@ -304,42 +305,127 @@ and that, given [[P0945R0]], this will work:
 The reason is "DRY" - don't repeat yourself - one is forced to repeat the name of the enumerator. That said, the authors are perfectly willing to throw this part of the paper out if the `using enum ENUM_ID` piece gets consensus and this is the stumbling block.
 
 
+Clarifications for Special Cases
+================================
+
+This section lists additional clarifications that may help inform the the wording.
+
+[namespace.udecl] p3
+---------------------
+
+Interplays with [namespace.udecl] p10:
+
+```cpp
+enum E { x };
+struct S {
+    enum H { y };
+    enum class K { z };
+    using E::x; // OK, introduces x into S
+    using E::x; // error, redeclaration in class scope
+    using H::y; // error, redeclaration in class scope
+    using K::z; // OK, introduces z into S
+};
+```
+
+In declarative regions which do allow multiple declarations, however:
+
+```cpp
+enum E { x };
+namespace NS {
+    enum H { y };
+    enum class K { z };
+    using E::x; // OK, introduces x into NS
+    using E::x; // OK, just a redeclaration of the same entity
+    using H::y; // OK, redeclaration of the same entity
+    using K::z; // OK, introduces z into NS
+};
+```
+
+[namespace.udecl] p8
+---------------------
+
+This change is meant to allow the introduction of class members that are enumerators into non-class scope. Consider this example:
+
+```cpp
+struct S {
+    enum E { x };
+    enum class EC { y };
+    using EC::y;
+};
+
+void f() {
+    using S::x; // OK
+    x; // resolves to S::E::x;
+    using S::y; // OK
+    y; // resolves to S::EC::y;
+}
+```
+
+Commas in the using declaration
+-------------------------------
+
+Since the grammar of the using declaration is not changed, it is valid to import multiple enumerators at the same time:
+
+```cpp
+enum class E { a, b, c };
+using E::a, E::b, E::c; // OK, imports all three.
+```
+
+Commas in the `using-enum-declaration`
+--------------------------------------
+
+Since "using namespace" does not allow them, this paper did not propose allowing the listing of several enumeration names in the *using-enum-declaration*.
+
+Names *using-enum-declaration* introduces
+----------------------------------
+
+The *using-enum-declaration* only introduces the names of the enumerators into the declarative region where it appears. It does not introduce the name of the enumeration it names.
+
+Example:
+```
+struct B {
+    enum class E { x };
+};
+enum class H { y };
+struct C : B {
+    using enum B::E; // OK, introduces E::x into C
+    using enum H; // OK, introduces y into C. Does not introduce H.
+};
+```
+
 Proposed Wording {#wording}
 ===========================
 
 Preface {#wording-preface}
 ------------------
 
-The idea is that the identifiers appear as if they were declared in the declarative region where the using-enum-directive appears, and not model the using-directive's "enclosing namespace" wording.
+The idea is that the identifiers appear as if they were declared in the declarative region where the using-enum-declaration appears, and not model the using-directive's "enclosing namespace" wording.
 
 All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.
 
 Changes {#wording-changes}
 -------------------------
 
+Under [namespace.udecl]:
 
-In chapter [namespace.udecl]:
-
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Note: this exception allows the introduction of enumerators into class scope. --end note]</ins>
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Note: This exception allows the introduction of enumerators into class scope. --end note]</ins>
 
 <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
 
-8. A <i>using-declaration</i> that names a class member <ins>that is not an enumerator</ins> shall be a <i>member-declaration</i>. <ins>[Note: the exception for enumerators allows the introduction of class members that are enumerators into non-class scope --end note]</ins>
+8. A <i>using-declaration</i> that names a class member <ins>other than an enumerator</ins> shall be a <i>member-declaration</i>.
 
-
-In chapter [dcl.dcl], in [dcl.enum], add section titled "Using Enum Directive", with the stable reference "[enum.udir]".
+Under [dcl.dcl], in [dcl.enum], add subclause titled "Using Enum Declaration", with the stable reference "[enum.udecl]".
 
 <div class='ins'>
-<i>using-enum-directive:</i><br>
+<i>using-enum-declaration:</i><br>
 <i>&nbsp;&nbsp;&nbsp;&nbsp;attribute-specifier-seq<sub>opt</sub></i>
-<tt>using </tt> <i>elaborated-type-specifier</i>;
+<tt>using </tt> <i>elaborated-enum-specifier</i> ;
 
-1. The <i>elaborated-type-specifier</i> shall name an enumeration. [Note: an elaborated type specifier for an enumeration always begins with `enum` -- end note]
-2. The <i>elaborated-type-specifier</i> shall not name a dependent type.
-2. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-directive</i>.
-3. A <i>using-enum-directive</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration. [Note: this means that they may be used, qualified or unqualified, after the <i>using-enum-directive</i> -- end note]
+1. The <i>elaborated-type-specifier</i> shall not name a dependent type.
+2. The optional <i>attribute-specifier-seq</i> appertains to the <i>using-enum-declaration</i>.
+3. A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration.
 
-[Note: an <i>using-enum-directive</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:
+[Note: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:
 ```
 enum class E { e1, e2 };
 struct S {
@@ -357,39 +443,48 @@ void f() {
 
 Under [basic.def], add (just after <i>using-directive</i>)  (and renumber section):
 <div class='ins'>
-2.17. &mdash; it is a <i>using-enum-directive</i>
+2.17. &mdash; it is a <i>using-enum-declaration</i>
 
 </div>
 
-In [gram.dcl], under <i>block-declaration</i>:
+In [dcl.dcl], under <i>block-declaration</i>:
 
 <i>block-declaration</i><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[...]<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<i>using-directive</i><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>using-enum-directive</i></ins><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>using-declaration</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>using-enum-declaration</i></ins><br/>
 
 In [class.mem], under <i>member-declaration</i>:
 
 <i>member-declaration</i><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;[...]<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<i>using-declaration</i><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>using-enum-directive</i></ins><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>using-enum-declaration</i></ins><br/>
 
+In [dcl.type.elab]:
 
-Note to editor:
+<i>elaborated-type-specifier:</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;...<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<del><tt>enum</tt> <i>nested-name-specifier<sub>opt</sub> identifier</i></del><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<ins><i>elaborated-enum-specifier</i></ins>
 
-For greater consistency, rename, everywhere:
-- "using directive" to "using namespace directive"
-- and "<i>using-directive</i>" to "<i>using-namespace-directive</i>"
-- [namespace.udir]'s title should be Using Namespace Directive.
+<i class='ins'>elaborated-enum-specifier:</i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<ins><tt>enum</tt> <i>nested-name-specifier<sub>opt</sub> identifier</i></ins><br/>
+
+To table 17 (Feature-test macros), add the feature test macro:
+
+<table>
+<tr><th>Name</th><th>Value</th></tr>
+<tr><td><ins>`__cpp_using_enum`</ins></td><td><ins>PLACEHOLDER DATE</ins></td></tr>
+</table>
+
+The PLACEHOLDER DATE should be replaced with the appropriate integer constant of type long.
 
 
 Acknowledgements {#ack}
 ================
 
-The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go. Casey Carter pointed out some issues with wording typography, and realized that this paper allows adding adl-only functions to enumerators.
-
-Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording, and found the need to make enum names non-dependent.
+The authors would like to thank Marcel Ebmer and Lisa Lippincott for early feedback, and the members of the BSI C++ WG for further feedback, especially Graham Haynes and Barry Revzin. Even further feedback was provided by Tomas Puverle, who encouraged us to extend it to `enum`s, and Dan Saks for the permission to include a quotation from him. A special thanks to Jeff Snyder who presented this to EWG, and to Richard Smith for pointing out direct injection is really the better way to go. Casey Carter pointed out some issues with wording typography, and realized that this paper allows adding adl-only functions to enumerators. Jens Maurer found some more edge-cases that needed to be explicitly spelled out, and provided invaluable help with wording. Another big thank-you to the Wizard of Worde, Richard Smith, who helped with the final wording, and found the need to make enum names non-dependent.
 
 <!--
  vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
