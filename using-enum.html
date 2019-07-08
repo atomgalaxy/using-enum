@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 71c22daa054b015c8313f61a987e93734c4ae794" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="9b09eb1cbb0c5873995d9ecb8355f930951ab73f" name="document-revision">
+  <meta content="750ae45e1ec3b08a58ac077ce5dbd6a253ce4083" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1547,7 +1547,7 @@ pre .property::before, pre .property::after {
     <li data-md>
      <p>r4: Clarified that <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>enum_name</c-></code> is supposed to have semantics as if the names were declared in the local scope as opposed to the way <em>using-directive</em> does it, as per EWG poll. Added Eric Niebler’s example for using this feature to enable ADL-only functions on exposed enumerators (to support <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>begin</c-></code> being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith’s request.</p>
     <li data-md>
-     <p>r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from <em>using-enum-declaration</em> to <em>using-enum-declaration</em>.</p>
+     <p>r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from <em>using-enum-directive</em> to <em>using-enum-declaration</em>.</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="status"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#status"></a></h2>
    <p>This paper has been approved by EWG in Kona 2019 and sent to Core with the ship vehicle of C++20.</p>
@@ -1790,7 +1790,7 @@ pre .property::before, pre .property::after {
    </ol>
    <p>Under [dcl.dcl], in [dcl.enum], add subclause titled "Using Enum Declaration", with the stable reference "[enum.udecl]".</p>
    <div class="ins">
-     <i>using-enum-declaration:</i><br> <i>    attribute-specifier-seq<sub>opt</sub></i> 
+     <i>using-enum-declaration:</i><br> 
     <tt>using </tt>
      <i>elaborated-enum-specifier</i> ; 
     <ol>

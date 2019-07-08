@@ -34,7 +34,7 @@ Revision History {#history}
 - r2: Added FAQ and wording, and extended to regular enums.
 - r3: Added examples. Nothing of substance changed.
 - r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll. Added Eric Niebler's example for using this feature to enable ADL-only functions on exposed enumerators (to support `std::begin` being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith's request.
-- r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from *using-enum-declaration* to *using-enum-declaration*.
+- r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from *using-enum-directive* to *using-enum-declaration*.
 
 Status of this paper {#status}
 ====================
@@ -418,7 +418,6 @@ Under [dcl.dcl], in [dcl.enum], add subclause titled "Using Enum Declaration", w
 
 <div class='ins'>
 <i>using-enum-declaration:</i><br>
-<i>&nbsp;&nbsp;&nbsp;&nbsp;attribute-specifier-seq<sub>opt</sub></i>
 <tt>using </tt> <i>elaborated-enum-specifier</i> ;
 
 1. The <i>elaborated-type-specifier</i> shall not name a dependent type.
