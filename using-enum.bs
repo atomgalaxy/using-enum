@@ -36,7 +36,8 @@ Revision History {#history}
 - r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll. Added Eric Niebler's example for using this feature to enable ADL-only functions on exposed enumerators (to support `std::begin` being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith's request.
 - r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from *using-enum-directive* to *using-enum-declaration*. Removed editorial notes for renaming *using-namespace-directive* since they are now not needed.
     - r5, post round 1 of CWG review: added clashing example, added "completely specified" wording to [dcl.enum], added wording that named enum is completely-specified.
-    - r5, post round 1.5 of CWG review: used wording from CWG.
+    - r5, post round 1.5 of CWG review: used wording from CWG, split example in [enum.udecl].
+    - r5, post round 2 of CWG review: added example in namespace.udir.
 
 Status of this paper {#status}
 ====================
