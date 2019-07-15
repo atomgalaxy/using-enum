@@ -410,9 +410,19 @@ Changes {#wording-changes}
 
 Under [namespace.udecl]:
 
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined.<del>
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Note:</ins><div class='ins'> Example: 
+```
+enum class button { up, down };
+struct S {
+   using button::up;
+   button b = up; // OK
+};
+```
+-- end note]
 
-7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
+</div>
+
+<del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
 
 8. A <i>using-declaration</i> that names a class member <ins>other than an enumerator</ins> shall be a <i>member-declaration</i>.
 
@@ -499,6 +509,7 @@ Acknowledgements {#ack}
 - Barry Revzin: feedback on R0
 - BSI C++ WG: feedback throughout the life of the process
 - Casey Carter: realization that this proposal allows adding adl-only functions to enumerations, typography feedback.
+- CWG for their help with wording
 - Dan Saks: early feedback, encouragement, quotation at start
 - Eric Niebler: for the example of adl-only functions for enumerations.
 - Graham Haynes: feedback on R0, and suggesting examples
@@ -507,7 +518,7 @@ Acknowledgements {#ack}
 - Lisa Lippincott: early feedback on preprint.
 - Marcel Ebmer: early feedback on preprint.
 - Richard Smith: change design to direct injection of names, why enum names must not be dependent types, and a lot of help with wording. The initial wording without Richard's involvement would have been much, much worse.
-- Roger Orr: championing with CWG
+- Roger Orr: championing with CWG, and the button example in namespace.udir
 - Tomas Puverle: encouragement to extend to regular `enum`s, and other feedback
 
 <!--
