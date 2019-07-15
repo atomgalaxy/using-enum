@@ -7,7 +7,7 @@ Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
 Shortname: D1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
-Date: 2019-07-14
+Date: 2019-07-15
 Markup Shorthands: markdown yes
 Revision: 5
 ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
@@ -36,6 +36,7 @@ Revision History {#history}
 - r4: Clarified that `using enum enum_name` is supposed to have semantics as if the names were declared in the local scope as opposed to the way *using-directive* does it, as per EWG poll. Added Eric Niebler's example for using this feature to enable ADL-only functions on exposed enumerators (to support `std::begin` being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith's request.
 - r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from *using-enum-directive* to *using-enum-declaration*. Removed editorial notes for renaming *using-namespace-directive* since they are now not needed.
     - r5, post round 1 of CWG review: added clashing example, added "completely specified" wording to [dcl.enum], added wording that named enum is completely-specified.
+    - r5, post round 1.5 of CWG review: used wording from CWG.
 
 Status of this paper {#status}
 ====================
@@ -407,13 +408,6 @@ All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, tho
 Changes {#wording-changes}
 -------------------------
 
-Under [dcl.enum] p6, insert a new p7:
-
-<div class='ins'>
-7. An enumeration is not a completely specified enumeration until immediately after the closing <tt>}</tt> of its <i>enum-specifier</i>, at which point it becomes completely specified.
-
-</div>
-
 Under [namespace.udecl]:
 
 3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined.<del>
@@ -428,8 +422,8 @@ Under [dcl.dcl], in [dcl.enum], add subclause titled "Using Enum Declaration", w
 <i>using-enum-declaration:</i><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<tt>using </tt><i>elaborated-enum-specifier</i> ;
 
-1. The <i>elaborated-enum-specifier</i> shall name a completely specified enumeration type which is not a dependent type.
-2. A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration, as if by a <i>using-declaration</i> for each enumerator.
+1. The <i>elaborated-enum-specifier</i> shall not name a dependent type and the type shall have a reachable <i>enum-specifier</i>.
+2. A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration as if by a <i>using-declaration</i> for each enumerator.
 
 [Note: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:
 ```
