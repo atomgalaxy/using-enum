@@ -408,9 +408,9 @@ Changes {#wording-changes}
 
 Under [namespace.udecl]:
 
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Note: This exception allows the introduction of enumerators into class scope. --end note]</ins>
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined.<del>
 
-<del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
+7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
 
 8. A <i>using-declaration</i> that names a class member <ins>other than an enumerator</ins> shall be a <i>member-declaration</i>.
 
