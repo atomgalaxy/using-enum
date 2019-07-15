@@ -411,7 +411,7 @@ Changes {#wording-changes}
 
 Under [namespace.udecl]:
 
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Note:</ins><div class='ins'> Example: 
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Example:</ins><div class='ins'>
 ```
 enum class button { up, down };
 struct S {
@@ -419,7 +419,7 @@ struct S {
    button b = up; // OK
 };
 ```
--- end note]
+-- end example]
 
 </div>
 
