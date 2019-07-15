@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>P1099R5: Using Enum</title>
+  <title>D1099R5: Using Enum</title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 71c22daa054b015c8313f61a987e93734c4ae794" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="e6550cca9a6463792b58c972ce42271f2194f41e" name="document-revision">
+  <meta content="6cafafba324de135f19effd0ecac1411983b3c1f" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1453,7 +1453,7 @@ pre .property::before, pre .property::after {
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">P1099R5<br>Using Enum</h1>
+   <h1 class="p-name no-ref" id="title">D1099R5<br>Using Enum</h1>
    <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Proposal, <time class="dt-updated" datetime="2019-07-14">2019-07-14</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
@@ -1548,6 +1548,10 @@ pre .property::before, pre .property::after {
      <p>r4: Clarified that <code class="highlight"><c- k>using</c-> <c- k>enum</c-> <c- n>enum_name</c-></code> is supposed to have semantics as if the names were declared in the local scope as opposed to the way <em>using-directive</em> does it, as per EWG poll. Added Eric Niebler’s example for using this feature to enable ADL-only functions on exposed enumerators (to support <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>begin</c-></code> being a CPO). Added editorial notes for renaming the current Using Directive to Using Namespace Directive on Richard Smith’s request.</p>
     <li data-md>
      <p>r5: Applied fixes from Jens Maurer: added feature test macro, a number of technical wording fixes, added example, renamed from <em>using-enum-directive</em> to <em>using-enum-declaration</em>. Removed editorial notes for renaming <em>using-namespace-directive</em> since they are now not needed.</p>
+     <ul>
+      <li data-md>
+       <p>r5, post round 1 of CWG review: added clashing example, added "completely specified" wording to [dcl.enum], added wording that named enum is completely-specified.</p>
+     </ul>
    </ul>
    <h2 class="heading settled" data-level="2" id="status"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#status"></a></h2>
    <p>This paper has been approved by EWG in Kona 2019 and sent to Core with the ship vehicle of C++20.</p>
@@ -1765,6 +1769,17 @@ pre .property::before, pre .property::after {
    <p>The idea is that the identifiers appear as if they were declared in the declarative region where the <em>using-enum-declaration</em> appears, and not model the using-directive’s "enclosing namespace" wording.</p>
    <p>All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.</p>
    <h3 class="heading settled" data-level="9.2" id="wording-changes"><span class="secno">9.2. </span><span class="content">Changes</span><a class="self-link" href="#wording-changes"></a></h3>
+   <p>Under [dcl.enum] p6, insert a new p7:</p>
+   <div class="ins">
+    <ol start="7">
+     <li data-md>
+      <p>
+       An enumeration is not a completely specified until immediately after the closing 
+       <tt>}</tt>
+        of its <i>enum-specifier</i>, at which point it becomes completely specified.
+      </p>
+    </ol>
+   </div>
    <p>Under [namespace.udecl]:</p>
    <ol start="3">
     <li data-md>
@@ -1775,12 +1790,11 @@ pre .property::before, pre .property::after {
        <i>nested-name-specifier</i> 
       <del>shall name</del>
       <ins>naming</ins>
-       a base class of the class being defined. 
-      <ins>[Note: This exception allows the introduction of enumerators into class scope. --end note]</ins>
+       a base class of the class being defined.
+      <del></del>
      </p>
-   </ol>
-   <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
-   <ol start="8">
+    <li data-md>
+     <p>A <i>using-declaration</i> shall not name a scoped enumerator.</p>
     <li data-md>
      <p>
       A <i>using-declaration</i> that names a class member 
@@ -1795,19 +1809,23 @@ pre .property::before, pre .property::after {
     <i>elaborated-enum-specifier</i> ; 
     <ol>
      <li data-md>
-      <p>The <i>elaborated-enum-specifier</i> shall not name a dependent type.</p>
+      <p>The <i>elaborated-enum-specifier</i> shall name a completely specified enumeration type which is not a dependent type.</p>
      <li data-md>
-      <p>A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration.</p>
+      <p>A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration into the scope in which it appears, as synonyms for the enumerators of the named enumeration, as if by a <i>using-declaration</i> for each enumerator.</p>
     </ol>
     <p>[Note: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:</p>
-<pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>E</c-> <c- p>{</c-> <c- n>e1</c-><c- p>,</c-> <c- n>e2</c-> <c- p>};</c->
+<pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>fruit</c-> <c- p>{</c-> <c- n>orange</c-><c- p>,</c-> <c- n>apple</c-> <c- p>};</c->
+<c- k>enum</c-> <c- k>class</c-> <c- nc>color</c-> <c- p>{</c-> <c- n>red</c-><c- p>,</c-> <c- n>orange</c-> <c- p>};</c->
 <c- k>struct</c-> <c- n>S</c-> <c- p>{</c->
-  <c- k>using</c-> <c- k>enum</c-> <c- n>E</c-><c- p>;</c-> <c- c1>// introduces e1 and e2 into S</c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// OK, introduces orange, apple into S</c->
+  <c- k>using</c-> <c- n>color</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// error, orange clashes.</c->
 <c- p>};</c->
 <c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
   <c- n>S</c-> <c- n>s</c-><c- p>;</c->
-  <c- n>s</c-><c- p>.</c-><c- n>e1</c-><c- p>;</c-> <c- c1>// well-formed, names E::e1.</c->
-  <c- n>S</c-><c- o>::</c-><c- n>e2</c-><c- p>;</c-> <c- c1>// well-formed, names E::e2.</c->
+  <c- n>s</c-><c- p>.</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// well-formed, names Fruit::orange.</c->
+  <c- n>S</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// well-formed, names Fruit::orange.</c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// ok, </c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>color</c-><c- p>;</c-> <c- c1>// error, color::orange and fruit::orange conflict.</c->
 <c- p>}</c->
 </pre>
     -- end note] 
