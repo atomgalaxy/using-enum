@@ -433,8 +433,8 @@ struct S {
 };
 void f() {
   S s;
-  s.orange; // well-formed, names Fruit::orange.
-  S::orange; // well-formed, names Fruit::orange.
+  s.orange; // OK, names fruit::orange.
+  S::orange; // OK, names fruit::orange.
 }
 ```
 
@@ -443,7 +443,7 @@ Two <i>using-enum-declaration</i>s that introduce two enumerators of the same na
 enum class fruit { orange, apple };
 enum class color { red, orange };
 void f() {
-  using enum fruit; // ok, 
+  using enum fruit; // OK
   using enum color; // error, color::orange and fruit::orange conflict.
 }
 ```

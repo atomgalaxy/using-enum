@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 71c22daa054b015c8313f61a987e93734c4ae794" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="040d83fa842ab9e345af12ce7e89a795ead2e2fb" name="document-revision">
+  <meta content="5e1826002dd774d94b117cf4f14ad0ce9f8b61b9" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1811,15 +1811,15 @@ pre .property::before, pre .property::after {
 <c- p>};</c->
 <c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
   <c- n>S</c-> <c- n>s</c-><c- p>;</c->
-  <c- n>s</c-><c- p>.</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// well-formed, names Fruit::orange.</c->
-  <c- n>S</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// well-formed, names Fruit::orange.</c->
+  <c- n>s</c-><c- p>.</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange.</c->
+  <c- n>S</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange.</c->
 <c- p>}</c->
 </pre>
     <p>Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name are in conflict:</p>
 <pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>fruit</c-> <c- p>{</c-> <c- n>orange</c-><c- p>,</c-> <c- n>apple</c-> <c- p>};</c->
 <c- k>enum</c-> <c- k>class</c-> <c- nc>color</c-> <c- p>{</c-> <c- n>red</c-><c- p>,</c-> <c- n>orange</c-> <c- p>};</c->
 <c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
-  <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// ok, </c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// OK</c->
   <c- k>using</c-> <c- k>enum</c-> <c- n>color</c-><c- p>;</c-> <c- c1>// error, color::orange and fruit::orange conflict.</c->
 <c- p>}</c->
 </pre>
