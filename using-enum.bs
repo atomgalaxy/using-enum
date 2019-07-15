@@ -428,15 +428,21 @@ Under [dcl.dcl], in [dcl.enum], add subclause titled "Using Enum Declaration", w
 [Note: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:
 ```
 enum class fruit { orange, apple };
-enum class color { red, orange };
 struct S {
   using enum fruit; // OK, introduces orange, apple into S
-  using color::orange; // error, orange clashes.
 };
 void f() {
   S s;
   s.orange; // well-formed, names Fruit::orange.
   S::orange; // well-formed, names Fruit::orange.
+}
+```
+
+Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name are in conflict:
+```
+enum class fruit { orange, apple };
+enum class color { red, orange };
+void f() {
   using enum fruit; // ok, 
   using enum color; // error, color::orange and fruit::orange conflict.
 }
