@@ -410,7 +410,7 @@ Changes {#wording-changes}
 Under [dcl.enum] p6, insert a new p7:
 
 <div class='ins'>
-7. An enumeration is not a completely specified until immediately after the closing <tt>}</tt> of its <i>enum-specifier</i>, at which point it becomes completely specified.
+7. An enumeration is not a completely specified enumeration until immediately after the closing <tt>}</tt> of its <i>enum-specifier</i>, at which point it becomes completely specified.
 
 </div>
 
