@@ -1,10 +1,10 @@
 <pre class='metadata'>
 Title: Using Enum
-Status: D
+Status: P
 Audience: CWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jonathan Müller <jonathan.mueller@foonathan.net>
-Shortname: D1099
+Shortname: P1099
 Abstract: Class enums are restricted namespaces. Let's extend the using declaration to them.
 Group: WG21
 Date: 2019-07-16
@@ -40,11 +40,12 @@ Revision History {#history}
     - r5, post round 2 of CWG review: added example in namespace.udir.
     - r5, morning: fixed reference to N4800, added 'Example' to second example in note.
     - r5, post round 3 of CWG review: removed full stops at end of code comments in examples, 'orange, apple' -> 'orange and apple', added [Example: --end example] to both examples in the 2nd note to make it clear where they begin and end, 'are in conflict' -> 'conflict'.
+    - r5: Approved by CWG.
 
 Status of this paper {#status}
 ====================
 
-This paper has been approved by EWG in Kona 2019 and sent to Core with the ship vehicle of C++20.
+This paper has been approved by CWG in Cologne 2019 for C++20 after being approved by EWG in Kona 2019 (ship vehicle C++20).
 
 
 Motivation {#motivation}
