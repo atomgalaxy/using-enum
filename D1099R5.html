@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 71c22daa054b015c8313f61a987e93734c4ae794" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="fac325f9fbe50dd71fa589731c386f1b06de2345" name="document-revision">
+  <meta content="84b16c25f8566e342f7523f31efd4ec5aba99273" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1771,7 +1771,7 @@ pre .property::before, pre .property::after {
    <h2 class="heading settled" data-level="9" id="wording"><span class="secno">9. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
    <h3 class="heading settled" data-level="9.1" id="wording-preface"><span class="secno">9.1. </span><span class="content">Preface</span><a class="self-link" href="#wording-preface"></a></h3>
    <p>The idea is that the identifiers appear as if they were declared in the declarative region where the <em>using-enum-declaration</em> appears, and not model the using-directive’s "enclosing namespace" wording.</p>
-   <p>All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N8000.</p>
+   <p>All wording is relative to the working draft of the ISO/IEC IS 14882: N4765, though, as it is almost entirely additive, it is also a valid diff to N4800.</p>
    <h3 class="heading settled" data-level="9.2" id="wording-changes"><span class="secno">9.2. </span><span class="content">Changes</span><a class="self-link" href="#wording-changes"></a></h3>
    <p>Under [namespace.udecl]:</p>
    <ol start="3">
@@ -1828,7 +1828,7 @@ pre .property::before, pre .property::after {
   <c- n>S</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange.</c->
 <c- p>}</c->
 </pre>
-    <p>Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name are in conflict:</p>
+    <p>Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name are in conflict. Example:</p>
 <pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>fruit</c-> <c- p>{</c-> <c- n>orange</c-><c- p>,</c-> <c- n>apple</c-> <c- p>};</c->
 <c- k>enum</c-> <c- k>class</c-> <c- nc>color</c-> <c- p>{</c-> <c- n>red</c-><c- p>,</c-> <c- n>orange</c-> <c- p>};</c->
 <c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
