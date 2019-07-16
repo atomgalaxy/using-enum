@@ -39,6 +39,7 @@ Revision History {#history}
     - r5, post round 1.5 of CWG review: used wording from CWG, split example in [enum.udecl].
     - r5, post round 2 of CWG review: added example in namespace.udir.
     - r5, morning: fixed reference to N4800, added 'Example' to second example in note.
+    - r5, post round 3 of CWG review: removed full stops at end of code comments in examples, 'orange, apple' -> 'orange and apple', added [Example: --end example] to both examples in the 2nd note to make it clear where they begin and end, 'are in conflict' -> 'conflict'.
 
 Status of this paper {#status}
 ====================
@@ -372,7 +373,7 @@ Since the grammar of the using declaration is not changed, it is valid to import
 
 ```cpp
 enum class E { a, b, c };
-using E::a, E::b, E::c; // OK, imports all three.
+using E::a, E::b, E::c; // OK, imports all three
 ```
 
 Commas in the <i>using-enum-declaration</i>
@@ -393,7 +394,7 @@ struct B {
 enum class H { y };
 struct C : B {
     using enum B::E; // OK, introduces E::x into C
-    using enum H; // OK, introduces y into C. Does not introduce H.
+    using enum H; // OK, introduces y into C. Does not introduce H
 };
 ```
 
@@ -412,7 +413,7 @@ Changes {#wording-changes}
 
 Under [namespace.udecl]:
 
-3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[Example:</ins><div class='ins'>
+3. In a <i>using-declaration</i> used as a <i>member-declaration</i>, each <i>using-declarator</i><del>'s</del> <ins>shall either name an enumerator or have a</ins> <i>nested-name-specifier</i> <del>shall name</del> <ins>naming</ins> a base class of the class being defined. <ins>[*Example:*</ins><div class='ins'>
     ```
 enum class button { up, down };
 struct S {
@@ -420,7 +421,7 @@ struct S {
    button b = up; // OK
 };
     ```
-    -- end example]
+    *-- end example*]
 
 </div>
 
@@ -437,29 +438,32 @@ Under [dcl.dcl], in [dcl.enum], add subclause titled "Using Enum Declaration", w
 1. The <i>elaborated-enum-specifier</i> shall not name a dependent type and the type shall have a reachable <i>enum-specifier</i>.
 2. A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration as if by a <i>using-declaration</i> for each enumerator.
 
-[Note: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:
+[*Note*: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup.
+[*Example*:
 ```
 enum class fruit { orange, apple };
 struct S {
-  using enum fruit; // OK, introduces orange, apple into S
+  using enum fruit; // OK, introduces orange and apple into S
 };
 void f() {
   S s;
-  s.orange; // OK, names fruit::orange.
-  S::orange; // OK, names fruit::orange.
+  s.orange; // OK, names fruit::orange
+  S::orange; // OK, names fruit::orange
 }
 ```
+*-- end example*]
 
-Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name are in conflict. Example:
+Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name conflict.
+[*Example:*
 ```
 enum class fruit { orange, apple };
 enum class color { red, orange };
 void f() {
   using enum fruit; // OK
-  using enum color; // error, color::orange and fruit::orange conflict.
+  using enum color; // error, color::orange and fruit::orange conflict
 }
 ```
--- end note]
+*-- end example*] *-- end note*]
 
 </div>
 

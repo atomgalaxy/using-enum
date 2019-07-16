@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 71c22daa054b015c8313f61a987e93734c4ae794" name="generator">
   <link href="https://github.com/atomgalaxy/using-enum/using-enum.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="91bb967c6c25a5a0afd86fc0bce79fb70e828cf5" name="document-revision">
+  <meta content="751c6fb9c890ef029996ab6fabc2dba304f17620" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1557,6 +1557,8 @@ pre .property::before, pre .property::after {
        <p>r5, post round 2 of CWG review: added example in namespace.udir.</p>
       <li data-md>
        <p>r5, morning: fixed reference to N4800, added <a class="property" data-link-type="propdesc">Example</a> to second example in note.</p>
+      <li data-md>
+       <p>r5, post round 3 of CWG review: removed full stops at end of code comments in examples, 'orange, apple' -> 'orange and apple', added [Example: --end example] to both examples in the 2nd note to make it clear where they begin and end, 'are in conflict' -> <a class="property" data-link-type="propdesc">conflict</a>.</p>
      </ul>
    </ul>
    <h2 class="heading settled" data-level="2" id="status"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#status"></a></h2>
@@ -1754,7 +1756,7 @@ pre .property::before, pre .property::after {
    <h3 class="heading settled" data-level="8.3" id="commas-in-the-using-declaration"><span class="secno">8.3. </span><span class="content">Commas in the using declaration</span><a class="self-link" href="#commas-in-the-using-declaration"></a></h3>
    <p>Since the grammar of the using declaration is not changed, it is valid to import multiple enumerators at the same time:</p>
 <pre class="language-cpp highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>E</c-> <c- p>{</c-> <c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>,</c-> <c- n>c</c-> <c- p>};</c->
-<c- k>using</c-> <c- n>E</c-><c- o>::</c-><c- n>a</c-><c- p>,</c-> <c- n>E</c-><c- o>::</c-><c- n>b</c-><c- p>,</c-> <c- n>E</c-><c- o>::</c-><c- n>c</c-><c- p>;</c-> <c- c1>// OK, imports all three.</c->
+<c- k>using</c-> <c- n>E</c-><c- o>::</c-><c- n>a</c-><c- p>,</c-> <c- n>E</c-><c- o>::</c-><c- n>b</c-><c- p>,</c-> <c- n>E</c-><c- o>::</c-><c- n>c</c-><c- p>;</c-> <c- c1>// OK, imports all three</c->
 </pre>
    <h3 class="heading settled" data-level="8.4" id="commas-in-the-using-enum-declaration"><span class="secno">8.4. </span><span class="content">Commas in the <i>using-enum-declaration</i></span><a class="self-link" href="#commas-in-the-using-enum-declaration"></a></h3>
    <p>Since "using namespace" does not allow them, this paper did not propose allowing the listing of several enumeration names in the <em>using-enum-declaration</em>.</p>
@@ -1767,7 +1769,7 @@ pre .property::before, pre .property::after {
 <c- k>enum</c-> <c- k>class</c-> <c- nc>H</c-> <c- p>{</c-> <c- n>y</c-> <c- p>};</c->
 <c- k>struct</c-> <c- nl>C</c-> <c- p>:</c-> <c- n>B</c-> <c- p>{</c->
     <c- k>using</c-> <c- k>enum</c-> <c- n>B</c-><c- o>::</c-><c- n>E</c-><c- p>;</c-> <c- c1>// OK, introduces E::x into C</c->
-    <c- k>using</c-> <c- k>enum</c-> <c- n>H</c-><c- p>;</c-> <c- c1>// OK, introduces y into C. Does not introduce H.</c->
+    <c- k>using</c-> <c- k>enum</c-> <c- n>H</c-><c- p>;</c-> <c- c1>// OK, introduces y into C. Does not introduce H</c->
 <c- p>};</c->
 </pre>
    <h2 class="heading settled" data-level="9" id="wording"><span class="secno">9. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
@@ -1786,7 +1788,7 @@ pre .property::before, pre .property::after {
       <del>shall name</del>
       <ins>naming</ins>
        a base class of the class being defined. 
-      <ins>[Example:</ins>
+      <ins>[<em>Example:</em></ins>
      </p>
      <div class="ins">
       <p></p>
@@ -1796,7 +1798,7 @@ pre .property::before, pre .property::after {
    <c- n>button</c-> <c- n>b</c-> <c- o>=</c-> <c- n>up</c-><c- p>;</c-> <c- c1>// OK</c->
 <c- p>};</c->
 </pre>
-      -- end example] 
+      <em>-- end example</em>] 
      </div>
    </ol>
    <del>7. A <i>using-declaration</i> shall not name a scoped enumerator.</del>
@@ -1819,26 +1821,29 @@ pre .property::before, pre .property::after {
      <li data-md>
       <p>A <i>using-enum-declaration</i> introduces the enumerator names of the named enumeration as if by a <i>using-declaration</i> for each enumerator.</p>
     </ol>
-    <p>[Note: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup. Example:</p>
+    <p>[<em>Note</em>: A <i>using-enum-declaration</i> in class scope adds the enumerators of the named enumeration as members to the scope. This means they are accessible for member lookup.
+[<em>Example</em>:</p>
 <pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>fruit</c-> <c- p>{</c-> <c- n>orange</c-><c- p>,</c-> <c- n>apple</c-> <c- p>};</c->
 <c- k>struct</c-> <c- n>S</c-> <c- p>{</c->
-  <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// OK, introduces orange, apple into S</c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// OK, introduces orange and apple into S</c->
 <c- p>};</c->
 <c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
   <c- n>S</c-> <c- n>s</c-><c- p>;</c->
-  <c- n>s</c-><c- p>.</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange.</c->
-  <c- n>S</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange.</c->
+  <c- n>s</c-><c- p>.</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange</c->
+  <c- n>S</c-><c- o>::</c-><c- n>orange</c-><c- p>;</c-> <c- c1>// OK, names fruit::orange</c->
 <c- p>}</c->
 </pre>
-    <p>Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name are in conflict. Example:</p>
+    <em>-- end example</em>] 
+    <p>Two <i>using-enum-declaration</i>s that introduce two enumerators of the same name conflict.
+[<em>Example:</em></p>
 <pre class="highlight"><c- k>enum</c-> <c- k>class</c-> <c- nc>fruit</c-> <c- p>{</c-> <c- n>orange</c-><c- p>,</c-> <c- n>apple</c-> <c- p>};</c->
 <c- k>enum</c-> <c- k>class</c-> <c- nc>color</c-> <c- p>{</c-> <c- n>red</c-><c- p>,</c-> <c- n>orange</c-> <c- p>};</c->
 <c- b>void</c-> <c- nf>f</c-><c- p>()</c-> <c- p>{</c->
   <c- k>using</c-> <c- k>enum</c-> <c- n>fruit</c-><c- p>;</c-> <c- c1>// OK</c->
-  <c- k>using</c-> <c- k>enum</c-> <c- n>color</c-><c- p>;</c-> <c- c1>// error, color::orange and fruit::orange conflict.</c->
+  <c- k>using</c-> <c- k>enum</c-> <c- n>color</c-><c- p>;</c-> <c- c1>// error, color::orange and fruit::orange conflict</c->
 <c- p>}</c->
 </pre>
-    -- end note] 
+    <em>-- end example</em>] <em>-- end note</em>] 
    </div>
    <p>Under [basic.def], add (just after <i>using-directive</i>)  (and renumber section):</p>
    <div class="ins"> 2.17. — it is a <i>using-enum-declaration</i> </div>
