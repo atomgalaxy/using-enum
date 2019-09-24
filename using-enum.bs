@@ -10,7 +10,7 @@ Group: WG21
 Date: 2019-07-16
 Markup Shorthands: markdown yes
 Revision: 5
-ED: https://github.com/atomgalaxy/using-enum/using-enum.bs
+ED: https://github.com/atomgalaxy/using-enum/blob/master/using-enum.bs
 </pre>
 
 <style>
